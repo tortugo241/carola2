@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Patrimonial — Mayo 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1e35;
+    --navy-mid: #162a47;
+    --gold: #c9a84c;
+    --gold-light: #e8c96b;
+    --cream: #f8f4ee;
+    --green: #2ecc8a;
+    --green-pale: #e0f7ef;
+    --red: #e05c5c;
+    --red-pale: #fde8e8;
+    --text: #1a1a2e;
+    --text-light: #5a6a7e;
+    --border: #d9cfc0;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 40px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+  }
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .header-meta {
+    margin-top: 20px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .header-meta-item span {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 4px;
+  }
+  .header-meta-item strong {
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+  }
+
+  .content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 48px 60px;
+  }
+
+  .section {
+    margin-bottom: 48px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+  }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 24px;
+  }
+
+  /* DISTRIBUTION TABLE */
+  .fund-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin-bottom: 16px;
+  }
+  .fund-table thead th {
+    background: var(--navy);
+    color: rgba(255,255,255,0.7);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 12px 16px;
+    text-align: left;
+  }
+  .fund-table thead th:last-child { text-align: right; }
+  .fund-table tbody tr { border-bottom: 1px solid #ede8e0; }
+  .fund-table tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+  }
+  .fund-table tbody td:last-child { text-align: right; }
+  .fund-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.015); }
+  
+  .fund-name { font-weight: 600; color: var(--navy); }
+  .fund-desc { font-size: 11.5px; color: var(--text-light); display: block; margin-top: 2px; }
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .tag-bajo { background: #e0f7ef; color: #1a8a5a; }
+  .tag-medio { background: #fff4e0; color: #b07d00; }
+  .tag-alto { background: #fde8e8; color: #c0392b; }
+  .tag-nulo { background: #ececec; color: #666; }
+  
+  .num { font-family: 'DM Mono', monospace; font-weight: 500; }
+  .num-pos { color: #1a8a5a; }
+  .num-neg { color: #c0392b; }
+  
+  .total-row td {
+    background: var(--navy) !important;
+    color: var(--white) !important;
+    font-weight: 600;
+    padding: 14px 16px;
+  }
+
+  /* PROJECTION MINI CARDS */
+  .proj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .proj-card {
+    background: #faf8f5;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    border-top: 3px solid var(--gold);
+  }
+  .proj-card.green-border { border-top-color: var(--green); }
+  .proj-card.red-border { border-top-color: var(--red); }
+  .proj-card-title {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+  }
+  .proj-card-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .proj-card-sub {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+  .proj-card-gain {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
+    margin-top: 6px;
+  }
+
+  /* MONTHLY REPORT FORM */
+  .report-form {
+    background: linear-gradient(135deg, #f9f6f1, #fff);
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .report-form h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--navy);
+    margin-bottom: 20px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .form-group label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .form-group input {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--white);
+  }
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+  .btn {
+    background: var(--navy);
+    color: var(--gold-light);
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  
+  /* HISTORY TABLE */
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-top: 16px;
+  }
+  .history-table th {
+    background: var(--navy);
+    color: rgba(255,255,255,0.7);
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .history-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ede8e0;
+  }
+  .history-table tr:nth-child(even) { background: rgba(0,0,0,0.015); }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .status-excelente { background: #e0f7ef; color: #1a8a5a; }
+  .status-bien { background: #e8f4e0; color: #3a7a2a; }
+  .status-ok { background: #fff4e0; color: #b07d00; }
+  .status-bajo { background: #fde8e8; color: #c0392b; }
+  .status-muy-bajo { background: #fde8e8; color: #a03030; border: 1px solid #e05c5c; }
+
+  /* ANALYSIS BOX */
+  .analysis-box {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-top: 24px;
+  }
+  .analysis-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+  }
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .analysis-item {
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .analysis-item .label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+  }
+  .analysis-item .value {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .analysis-item .sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+
+  /* ALERTS */
+  .alert {
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    display: none;
+  }
+  .alert-success { background: var(--green-pale); color: #1a8a5a; border-left: 4px solid var(--green); display: block; }
+  .alert-warning { background: #fff4e0; color: #b07d00; border-left: 4px solid var(--gold); display: block; }
+  .alert-danger { background: var(--red-pale); color: #c0392b; border-left: 4px solid var(--red); display: block; }
+
+  .month-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .month-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .month-btn:hover { border-color: var(--gold); }
+  .month-btn.active {
+    background: var(--navy);
+    color: var(--gold-light);
+    border-color: var(--navy);
+  }
+
+  .chart-container {
+    height: 300px;
+    margin: 24px 0;
+    position: relative;
+  }
+  .mini-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 200px;
+    padding: 20px 0;
+    border-bottom: 2px solid var(--border);
+  }
+  .bar {
+    flex: 1;
+    background: var(--gold);
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    position: relative;
+    transition: all 0.3s;
+  }
+  .bar:hover { opacity: 0.8; }
+  .bar-label {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-45deg);
+    font-size: 10px;
+    color: var(--text-light);
+    white-space: nowrap;
+  }
+
+  .hidden { display: none !important; }
+  
+  @media print {
+    body { background: white; }
+    .section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">Dashboard Patrimonial Privado</div>
+  <h1>Seguimiento de Inversiones</h1>
+  <div class="header-meta">
+    <div class="header-meta-item">
+      <span>Inicio seguimiento</span>
+      <strong>Mayo 2026</strong>
+    </div>
+    <div class="header-meta-item">
+      <span>Patrimonio inicial</span>
+      <strong>$7.524.819</strong>
+    </div>
+    <div class="header-meta-item">
+      <span>Aporte mensual</span>
+      <strong>$150.000</strong>
+    </div>
+    <div class="header-meta-item">
+      <span>Perfil</span>
+      <strong>Moderado-Agresivo</strong>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- DISTRIBUCIÓN ACTUAL -->
+  <div class="section">
+    <div class="section-label">Estructura desde mayo 2026</div>
+    <h2>Distribución actual de tu patrimonio</h2>
+    
+    <table class="fund-table">
+      <thead>
+        <tr>
+          <th>Instrumento</th>
+          <th>Institución</th>
+          <th>Riesgo</th>
+          <th>Tasa esperada</th>
+          <th>Monto base</th>
+        </tr>
+      </thead>
+      <tbody id="fundsTable">
+        <!-- Se llena por JS -->
+      </tbody>
+    </table>
+    <p style="font-size:11.5px;color:var(--text-light);margin-top:12px;">
+      💡 Las tasas esperadas son las proyecciones conservadoras (escenario moderado). Los valores de "Monto base" son los iniciales post-reestructuración de abril.
+    </p>
+  </div>
+
+  <!-- PROYECCIONES -->
+  <div class="section">
+    <div class="section-label">Proyecciones automáticas</div>
+    <h2>Crecimiento esperado por fondo (365 días)</h2>
+    <div class="proj-grid" id="projectionGrid">
+      <!-- Se llena por JS -->
+    </div>
+    
+    <div style="background:#f9f6f1;border-radius:10px;padding:20px;margin-top:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:13px;color:var(--text-light);">Proyección total patrimonio (moderado)</span>
+        <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--navy);">$8.347.363</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:13px;color:var(--text-light);">Proyección total patrimonio (optimista)</span>
+        <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--green);">$8.670.133</span>
+      </div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text-light);">
+        Con aportes mensuales de $150.000 × 10 meses + intereses: <strong style="color:var(--navy);">$9.934.863 – $10.270.133</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORTE MENSUAL -->
+  <div class="section">
+    <div class="section-label">Reporte mensual</div>
+    <h2>Registra el valor real de tus fondos</h2>
+    
+    <div class="month-selector" id="monthSelector">
+      <button class="month-btn active" data-month="0">Mayo 2026</button>
+      <button class="month-btn" data-month="1">Junio 2026</button>
+      <button class="month-btn" data-month="2">Julio 2026</button>
+      <button class="month-btn" data-month="3">Agosto 2026</button>
+      <button class="month-btn" data-month="4">Septiembre 2026</button>
+      <button class="month-btn" data-month="5">Octubre 2026</button>
+      <button class="month-btn" data-month="6">Noviembre 2026</button>
+      <button class="month-btn" data-month="7">Diciembre 2026</button>
+      <button class="month-btn" data-month="8">Enero 2027</button>
+      <button class="month-btn" data-month="9">Febrero 2027</button>
+      <button class="month-btn" data-month="10">Marzo 2027</button>
+      <button class="month-btn" data-month="11">Abril 2027</button>
+    </div>
+
+    <div id="alertBox" class="alert hidden"></div>
+
+    <div class="report-form">
+      <h3 id="formTitle">Reporte Mayo 2026</h3>
+      <div class="form-grid" id="formGrid">
+        <!-- Se llena por JS -->
+      </div>
+      <div class="form-group" style="max-width:300px;">
+        <label>¿Realizaste el aporte de $150.000 este mes?</label>
+        <select id="aporteMensual" style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--white);">
+          <option value="si">Sí, aporté $150.000</option>
+          <option value="no">No aporté este mes</option>
+          <option value="parcial">Aporté monto diferente</option>
+        </select>
+      </div>
+      <div class="form-group hidden" id="aporteParcialGroup" style="max-width:300px;margin-top:12px;">
+        <label>Monto aportado (CLP)</label>
+        <input type="number" id="aporteParcial" placeholder="Ej: 100000">
+      </div>
+      <div style="margin-top:20px;">
+        <button class="btn" onclick="guardarReporte()">Guardar reporte mensual</button>
+        <button class="btn" onclick="calcularAnalisis()" style="background:var(--gold);color:var(--navy);margin-left:10px;">Ver análisis inteligente</button>
+      </div>
+    </div>
+
+    <!-- ANÁLISIS INTELIGENTE -->
+    <div id="analysisSection" class="analysis-box hidden">
+      <h3>📊 Análisis Inteligente del Mes</h3>
+      <div id="analysisContent"></div>
+    </div>
+
+    <!-- HISTORIAL -->
+    <div style="margin-top:32px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:16px;">Historial de reportes</h3>
+      <div style="overflow-x:auto;">
+        <table class="history-table" id="historyTable">
+          <thead>
+            <tr>
+              <th>Mes</th>
+              <th>Total reportado</th>
+              <th>Esperado</th>
+              <th>Diferencia</th>
+              <th>Tasa real mensual</th>
+              <th>Tasa esperada</th>
+              <th>Estado</th>
+              <th>Aporte</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr><td colspan="8" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GRÁFICO SIMPLE -->
+    <div style="margin-top:32px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:16px;">Evolución del patrimonio</h3>
+      <div class="chart-container">
+        <div class="mini-chart" id="evolutionChart">
+          <!-- Barras generadas por JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// CONFIGURACIÓN INICIAL — Mayo 2026
+const fondos = [
+  { id: 'bice_vista', nombre: 'Cuenta vista BICE', institucion: 'BICE', riesgo: 'nulo', tasaAnual: 0, monto: 50000, tipo: 'fijo' },
+  { id: 'match', nombre: 'Ahorro 24/7 Match', institucion: 'Match', riesgo: 'bajo', tasaAnual: 4.6, monto: 550000, tipo: 'fijo' },
+  { id: 'bice_emergentes', nombre: 'Acciones Mercados Emergentes', institucion: 'BICE', riesgo: 'alto', tasaAnual: 20, monto: 1144872, tipo: 'variable' },
+  { id: 'bice_digital', nombre: 'Digital Balanceado', institucion: 'BICE', riesgo: 'medio', tasaAnual: 14, monto: 754582, tipo: 'variable' },
+  { id: 'lv_lider', nombre: 'LV Portfolio Líder A', institucion: 'LarrainVial', riesgo: 'alto', tasaAnual: 15, monto: 1094628, tipo: 'variable' },
+  { id: 'lv_estrategico', nombre: 'LV Ahorro Estratégico D', institucion: 'LarrainVial', riesgo: 'medio', tasaAnual: 10, monto: 401846, tipo: 'variable' },
+  { id: 'lv_plazo', nombre: 'LV Ahorro a Plazo D', institucion: 'LarrainVial', riesgo: 'medio', tasaAnual: 10, monto: 374301, tipo: 'variable' },
+  { id: 'lv_corporativo', nombre: 'LV Ahorro Corporativo A', institucion: 'LarrainVial', riesgo: 'bajo', tasaAnual: 7, monto: 1473385, tipo: 'fijo' },
+  { id: 'lv_capital', nombre: 'LV Ahorro Capital A', institucion: 'LarrainVial', riesgo: 'bajo', tasaAnual: 7, monto: 1681204, tipo: 'fijo' }
+];
+
+const meses = ['Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre','Enero','Febrero','Marzo','Abril'];
+const anno = ['2026','2026','2026','2026','2026','2026','2026','2026','2027','2027','2027','2027'];
+
+let currentMonth = 0;
+let reportes = JSON.parse(localStorage.getItem('reportesPatrimonio') || '[]');
+
+// INICIALIZAR
+function init() {
+  renderFundsTable();
+  renderProjections();
+  renderForm();
+  renderHistory();
+  renderChart();
+  
+  // Selector de meses
+  document.querySelectorAll('.month-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentMonth = parseInt(e.target.dataset.month);
+      document.getElementById('formTitle').textContent = `Reporte ${meses[currentMonth]} ${anno[currentMonth]}`;
+      loadExistingReport();
+    });
+  });
+
+  document.getElementById('aporteMensual').addEventListener('change', (e) => {
+    document.getElementById('aporteParcialGroup').classList.toggle('hidden', e.target.value !== 'parcial');
+  });
+}
+
+function renderFundsTable() {
+  const tbody = document.getElementById('fundsTable');
+  let total = 0;
+  tbody.innerHTML = fondos.map(f => {
+    total += f.monto;
+    const tagClass = f.riesgo === 'nulo' ? 'tag-nulo' : f.riesgo === 'bajo' ? 'tag-bajo' : f.riesgo === 'medio' ? 'tag-medio' : 'tag-alto';
+    const tagText = f.riesgo === 'nulo' ? '0%' : f.riesgo === 'bajo' ? 'Bajo' : f.riesgo === 'medio' ? 'Medio' : 'Alto';
+    const tasaText = f.tasaAnual === 0 ? '0,00%' : f.tasaAnual + '%';
+    return `
+      <tr>
+        <td>
+          <span class="fund-name">${f.nombre}</span>
+          <span class="fund-desc">${f.institucion}</span>
+        </td>
+        <td>${f.institucion}</td>
+        <td><span class="tag ${tagClass}">${tagText}</span></td>
+        <td class="num ${f.tasaAnual > 0 ? 'num-pos' : ''}">${tasaText}</td>
+        <td class="num">$${f.monto.toLocaleString('es-CL')}</td>
+      </tr>
+    `;
+  }).join('') + `
+    <tr class="total-row">
+      <td colspan="4"><strong>Total patrimonio base</strong></td>
+      <td><strong>$${total.toLocaleString('es-CL')}</strong></td>
+    </tr>
+  `;
+}
+
+function renderProjections() {
+  const grid = document.getElementById('projectionGrid');
+  grid.innerHTML = fondos.map(f => {
+    if (f.tasaAnual === 0) return '';
+    const proj365 = Math.round(f.monto * (1 + f.tasaAnual / 100));
+    const ganancia = proj365 - f.monto;
+    const borderClass = f.tasaAnual >= 15 ? 'green-border' : f.tasaAnual >= 10 ? '' : 'red-border';
+    return `
+      <div class="proj-card ${borderClass}">
+        <div class="proj-card-title">${f.nombre}</div>
+        <div class="proj-card-val">$${proj365.toLocaleString('es-CL')}</div>
+        <div class="proj-card-sub">Base: $${f.monto.toLocaleString('es-CL')}</div>
+        <div class="proj-card-gain">+ $${ganancia.toLocaleString('es-CL')} / año</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderForm() {
+  const grid = document.getElementById('formGrid');
+  grid.innerHTML = fondos.map(f => `
+    <div class="form-group">
+      <label>${f.nombre} (${f.institucion})</label>
+      <input type="number" id="val_${f.id}" placeholder="$${f.monto.toLocaleString('es-CL')}" step="1000">
+    </div>
+  `).join('');
+}
+
+function loadExistingReport() {
+  const reporte = reportes.find(r => r.mes === currentMonth);
+  if (!reporte) {
+    fondos.forEach(f => document.getElementById(`val_${f.id}`).value = '');
+    document.getElementById('aporteMensual').value = 'si';
+    document.getElementById('aporteParcial').value = '';
+    document.getElementById('aporteParcialGroup').classList.add('hidden');
+    return;
+  }
+  
+  fondos.forEach(f => {
+    const val = reporte.valores[f.id];
+    document.getElementById(`val_${f.id}`).value = val || '';
+  });
+  
+  document.getElementById('aporteMensual').value = reporte.aporteTipo || 'si';
+  if (reporte.aporteTipo === 'parcial') {
+    document.getElementById('aporteParcial').value = reporte.aporteMonto || '';
+    document.getElementById('aporteParcialGroup').classList.remove('hidden');
+  } else {
+    document.getElementById('aporteParcialGroup').classList.add('hidden');
+  }
+}
+
+function guardarReporte() {
+  const valores = {};
+  let totalReportado = 0;
+  let hasData = false;
+  
+  fondos.forEach(f => {
+    const val = parseFloat(document.getElementById(`val_${f.id}`).value) || 0;
+    if (val > 0) hasData = true;
+    valores[f.id] = val;
+    totalReportado += val;
+  });
+  
+  if (!hasData) {
+    showAlert('Debes ingresar al menos un valor para guardar el reporte.', 'warning');
+    return;
+  }
+  
+  const aporteTipo = document.getElementById('aporteMensual').value;
+  const aporteMonto = aporteTipo === 'si' ? 150000 : aporteTipo === 'parcial' ? (parseFloat(document.getElementById('aporteParcial').value) || 0) : 0;
+  
+  // Calcular esperado para este mes
+  const mesesTranscurridos = currentMonth + 1;
+  const totalEsperado = calcularEsperadoAcumulado(mesesTranscurridos, aporteMonto);
+  
+  const reporte = {
+    mes: currentMonth,
+    mesNombre: meses[currentMonth] + ' ' + anno[currentMonth],
+    valores,
+    totalReportado,
+    totalEsperado,
+    aporteTipo,
+    aporteMonto,
+    fechaGuardado: new Date().toISOString()
+  };
+  
+  // Reemplazar si existe
+  const idx = reportes.findIndex(r => r.mes === currentMonth);
+  if (idx >= 0) reportes[idx] = reporte;
+  else reportes.push(reporte);
+  
+  reportes.sort((a,b) => a.mes - b.mes);
+  localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
+  
+  showAlert(`✅ Reporte de ${meses[currentMonth]} guardado. Total reportado: $${totalReportado.toLocaleString('es-CL')}`, 'success');
+  renderHistory();
+  renderChart();
+}
+
+function calcularEsperadoAcumulado(mesesTranscurridos, aporteMensual) {
+  // Fórmula: base * (1 + tasaMensual)^meses + aportes acumulados con intereses parciales
+  let total = 0;
+  fondos.forEach(f => {
+    const tasaMensual = f.tasaAnual / 100 / 12;
+    const valorEsperado = f.monto * Math.pow(1 + tasaMensual, mesesTranscurridos);
+    total += valorEsperado;
+  });
+  
+  // Aportes mensuales acumulados (asumiendo que van a Digital Balanceado ~14% anual)
+  if (aporteMensual > 0) {
+    const tasaAporte = 0.14 / 12; // Digital Balanceado
+    for (let i = 0; i < mesesTranscurridos; i++) {
+      total += aporteMensual * Math.pow(1 + tasaAporte, mesesTranscurridos - i);
+    }
+  }
+  
+  return Math.round(total);
+}
+
+function calcularAnalisis() {
+  const reporte = reportes.find(r => r.mes === currentMonth);
+  if (!reporte) {
+    showAlert('Primero guarda un reporte para este mes para ver el análisis.', 'warning');
+    return;
+  }
+  
+  const section = document.getElementById('analysisSection');
+  const content = document.getElementById('analysisContent');
+  section.classList.remove('hidden');
+  
+  let html = '<div class="analysis-grid">';
+  
+  // Análisis por fondo
+  fondos.forEach(f => {
+    if (f.tasaAnual === 0) return;
+    const real = reporte.valores[f.id] || 0;
+    const tasaMensualEsperada = f.tasaAnual / 100 / 12;
+    const mesesTranscurridos = currentMonth + 1;
+    const esperado = f.monto * Math.pow(1 + tasaMensualEsperada, mesesTranscurridos);
+    const diferencia = real - esperado;
+    const tasaRealAnualizada = real > 0 ? ((real / f.monto) - 1) * (12 / mesesTranscurridos) * 100 : 0;
+    
+    let estado = 'ok';
+    let color = 'var(--gold-light)';
+    let mensaje = 'Dentro de lo esperado';
+    
+    if (diferencia > esperado * 0.05) {
+      estado = 'excelente';
+      color = 'var(--green)';
+      mensaje = '🚀 Muy por encima de lo esperado';
+    } else if (diferencia < -esperado * 0.05) {
+      estado = 'bajo';
+      color = 'var(--red)';
+      mensaje = '⚠️ Por debajo de lo esperado';
+    }
+    
+    html += `
+      <div class="analysis-item">
+        <div class="label">${f.nombre}</div>
+        <div class="value" style="color:${color}">$${real.toLocaleString('es-CL')}</div>
+        <div class="sub">
+          Esperado: $${Math.round(esperado).toLocaleString('es-CL')}<br>
+          Diferencia: ${diferencia >= 0 ? '+' : ''}$${Math.round(diferencia).toLocaleString('es-CL')}<br>
+          Tasa real anualizada: ${tasaRealAnualizada.toFixed(1)}% (esperada: ${f.tasaAnual}%)<br>
+          <strong>${mensaje}</strong>
+        </div>
+      </div>
+    `;
+  });
+  
+  // Análisis global
+  const totalReal = reporte.totalReportado;
+  const totalEsperado = reporte.totalEsperado;
+  const difGlobal = totalReal - totalEsperado;
+  const tasaGlobalReal = ((totalReal / 7524819) - 1) * (12 / (currentMonth + 1)) * 100;
+  const tasaGlobalEsperada = 10.9; // Aproximado del escenario moderado
+  
+  html += `
+    <div class="analysis-item" style="border:2px solid var(--gold);">
+      <div class="label">📈 RESUMEN GLOBAL</div>
+      <div class="value">$${totalReal.toLocaleString('es-CL')}</div>
+      <div class="sub">
+        Esperado: $${totalEsperado.toLocaleString('es-CL')}<br>
+        Diferencia: ${difGlobal >= 0 ? '+' : ''}$${difGlobal.toLocaleString('es-CL')}<br>
+        Tu tasa real: ${tasaGlobalReal.toFixed(1)}% anual<br>
+        Tasa esperada portfolio: ~${tasaGlobalEsperada}%<br>
+        <strong style="color:${difGlobal >= 0 ? 'var(--green)' : 'var(--red)'}">
+          ${difGlobal >= 0 ? '✅ Vas bien encaminado' : '⚠️ Revisa las posiciones en rojo'}
+        </strong>
+      </div>
+    </div>
+  `;
+  
+  html += '</div>';
+  content.innerHTML = html;
+  
+  // Scroll al análisis
+  section.scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderHistory() {
+  const tbody = document.getElementById('historyBody');
+  if (reportes.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = reportes.map(r => {
+    const dif = r.totalReportado - r.totalEsperado;
+    const difPct = r.totalEsperado > 0 ? (dif / r.totalEsperado * 100).toFixed(1) : 0;
+    const tasaReal = ((r.totalReportado / 7524819) - 1) * (12 / (r.mes + 1)) * 100;
+    
+    let statusClass = 'status-ok';
+    let statusText = 'Normal';
+    
+    if (difPct > 5) { statusClass = 'status-excelente'; statusText = 'Excelente 🚀'; }
+    else if (difPct > 2) { statusClass = 'status-bien'; statusText = 'Bien 👍'; }
+    else if (difPct < -5) { statusClass = 'status-muy-bajo'; statusText = 'Muy bajo ⚠️'; }
+    else if (difPct < -2) { statusClass = 'status-bajo'; statusText = 'Bajo 📉'; }
+    
+    return `
+      <tr>
+        <td><strong>${r.mesNombre}</strong></td>
+        <td class="num">$${r.totalReportado.toLocaleString('es-CL')}</td>
+        <td class="num">$${r.totalEsperado.toLocaleString('es-CL')}</td>
+        <td class="num ${dif >= 0 ? 'num-pos' : 'num-neg'}">${dif >= 0 ? '+' : ''}$${dif.toLocaleString('es-CL')}</td>
+        <td class="num">${tasaReal.toFixed(1)}%</td>
+        <td class="num">~10.9%</td>
+        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+        <td>${r.aporteMonto > 0 ? '$' + r.aporteMonto.toLocaleString('es-CL') : '—'}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderChart() {
+  const chart = document.getElementById('evolutionChart');
+  if (reportes.length === 0) {
+    chart.innerHTML = '<div style="text-align:center;color:var(--text-light);padding:40px;">Ingresa tu primer reporte para ver la evolución</div>';
+    return;
+  }
+  
+  const maxVal = Math.max(...reportes.map(r => r.totalReportado), 9000000);
+  const minVal = 7000000;
+  
+  chart.innerHTML = reportes.map((r, i) => {
+    const height = ((r.totalReportado - minVal) / (maxVal - minVal)) * 100;
+    const barHeight = Math.max(height, 5);
+    const dif = r.totalReportado - r.totalEsperado;
+    const color = dif >= 0 ? 'var(--green)' : dif < -r.totalEsperado*0.03 ? 'var(--red)' : 'var(--gold)';
+    
+    return `
+      <div class="bar" style="height:${barHeight}%;background:${color};">
+        <div class="bar-label">${meses[r.mes].substring(0,3)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showAlert(msg, type) {
+  const alert = document.getElementById('alertBox');
+  alert.className = `alert alert-${type}`;
+  alert.textContent = msg;
+  setTimeout(() => alert.classList.add('hidden'), 5000);
+}
+
+// Inicializar al cargar
+init();
+</script>
+
+</body>
+</html>
