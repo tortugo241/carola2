@@ -1,0 +1,16 @@
+Proximo prompt:
+
+Esta quedando muy bueno, Quiero que crees una nueva pestaña para tener tambien una cartola diaria. 
+
+Esta cartola debe registarar ingresos, gastos y cambios de cuenta de los fondos. Debe tener un espacio para poner una descripcion de cada movimiento y categorias:
+Para los ingresos: Sueldo CVD, Mesada, otros sueldos y otros.
+Para los gastos: Comida, transporte, tecnologia y carrete.
+
+Utilizo tres cuentas corrientes para pagar cosas y muevo la plata entre ellas: Bice, match (no la misma cuenta de inversion) y prex. 
+
+Quiero que tenga graficos de en que gasto mi plata y cuales son mis principales fuentes de ingreso.
+Ademas lo mas arriba debe salir cuanto tengo en mis CC (la suma de las tres) y cuanto tengo de patrimonio total (la suma de todo) esto esta siempre actualizado al ultimo dia. 
+
+Esta pestaña debe poder tener vista mensual, trimestral, semestral y anual. 
+
+Abajo de los otros graficos quiero un grafico de puntos y lineas que muestre la evolucion de mi patrimonio y otro de la evolucion de mis CC. Que tengan opcion de cambiar el tiempo de visualizacion
