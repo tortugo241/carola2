@@ -30,6 +30,90 @@
     line-height: 1.6;
   }
 
+  /* LOGIN SCREEN */
+  .login-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, var(--navy) 0%, #1a3050 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: opacity 0.5s, visibility 0.5s;
+  }
+  .login-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .login-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  .login-box .icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 28px;
+  }
+  .login-box h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .login-box p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 28px;
+  }
+  .login-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 15px;
+    margin-bottom: 12px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .login-input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+  }
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--navy);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .login-btn:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .login-error {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+  .login-error.show { display: block; }
+
   .header {
     background: var(--navy);
     color: var(--white);
@@ -78,6 +162,23 @@
     color: rgba(255,255,255,0.9);
     font-weight: 500;
   }
+  .logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover {
+    background: rgba(255,255,255,0.2);
+    color: var(--white);
+  }
 
   .content {
     max-width: 1100px;
@@ -108,7 +209,6 @@
     margin-bottom: 24px;
   }
 
-  /* DISTRIBUTION TABLE */
   .fund-table {
     width: 100%;
     border-collapse: collapse;
@@ -133,7 +233,7 @@
   }
   .fund-table tbody td:last-child { text-align: right; }
   .fund-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.015); }
-  
+
   .fund-name { font-weight: 600; color: var(--navy); }
   .fund-desc { font-size: 11.5px; color: var(--text-light); display: block; margin-top: 2px; }
   .tag {
@@ -147,11 +247,11 @@
   .tag-medio { background: #fff4e0; color: #b07d00; }
   .tag-alto { background: #fde8e8; color: #c0392b; }
   .tag-nulo { background: #ececec; color: #666; }
-  
+
   .num { font-family: 'DM Mono', monospace; font-weight: 500; }
   .num-pos { color: #1a8a5a; }
   .num-neg { color: #c0392b; }
-  
+
   .total-row td {
     background: var(--navy) !important;
     color: var(--white) !important;
@@ -159,7 +259,6 @@
     padding: 14px 16px;
   }
 
-  /* PROJECTION MINI CARDS */
   .proj-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -200,7 +299,6 @@
     margin-top: 6px;
   }
 
-  /* MONTHLY REPORT FORM */
   .report-form {
     background: linear-gradient(135deg, #f9f6f1, #fff);
     border: 2px dashed var(--border);
@@ -232,7 +330,7 @@
     margin-bottom: 6px;
     font-weight: 500;
   }
-  .form-group input {
+  .form-group input, .form-group select {
     padding: 10px 14px;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -241,7 +339,7 @@
     color: var(--text);
     background: var(--white);
   }
-  .form-group input:focus {
+  .form-group input:focus, .form-group select:focus {
     outline: none;
     border-color: var(--gold);
     box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
@@ -258,8 +356,24 @@
     transition: all 0.2s;
   }
   .btn:hover { background: var(--navy-mid); transform: translateY(-1px); }
-  
-  /* HISTORY TABLE */
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--border);
+    margin-left: 8px;
+  }
+  .btn-secondary:hover { background: #f5f5f5; }
+  .btn-danger {
+    background: var(--red);
+    color: var(--white);
+    margin-left: 8px;
+  }
+  .btn-danger:hover { background: #c0392b; }
+  .btn-small {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
   .history-table {
     width: 100%;
     border-collapse: collapse;
@@ -281,7 +395,8 @@
     border-bottom: 1px solid #ede8e0;
   }
   .history-table tr:nth-child(even) { background: rgba(0,0,0,0.015); }
-  
+  .history-table tr:hover { background: rgba(201,168,76,0.05); }
+
   .status-badge {
     display: inline-block;
     padding: 2px 8px;
@@ -295,7 +410,6 @@
   .status-bajo { background: #fde8e8; color: #c0392b; }
   .status-muy-bajo { background: #fde8e8; color: #a03030; border: 1px solid #e05c5c; }
 
-  /* ANALYSIS BOX */
   .analysis-box {
     background: var(--navy);
     color: var(--white);
@@ -339,7 +453,6 @@
     margin-top: 4px;
   }
 
-  /* ALERTS */
   .alert {
     padding: 14px 18px;
     border-radius: 8px;
@@ -350,6 +463,7 @@
   .alert-success { background: var(--green-pale); color: #1a8a5a; border-left: 4px solid var(--green); display: block; }
   .alert-warning { background: #fff4e0; color: #b07d00; border-left: 4px solid var(--gold); display: block; }
   .alert-danger { background: var(--red-pale); color: #c0392b; border-left: 4px solid var(--red); display: block; }
+  .alert-info { background: #e8f0ff; color: #2a5a9e; border-left: 4px solid #4a90d9; display: block; }
 
   .month-selector {
     display: flex;
@@ -393,6 +507,7 @@
     min-height: 4px;
     position: relative;
     transition: all 0.3s;
+    cursor: pointer;
   }
   .bar:hover { opacity: 0.8; }
   .bar-label {
@@ -405,17 +520,92 @@
     white-space: nowrap;
   }
 
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15,30,53,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+  }
+  .modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  .modal-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    transform: translateY(20px);
+    transition: transform 0.3s;
+  }
+  .modal-overlay.show .modal-box {
+    transform: translateY(0);
+  }
+  .modal-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .modal-box p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
   .hidden { display: none !important; }
-  
+
   @media print {
     body { background: white; }
     .section { break-inside: avoid; }
+    .login-overlay, .logout-btn, .modal-overlay { display: none !important; }
   }
 </style>
+<base target="_blank">
 </head>
 <body>
 
-<div class="header">
+<!-- LOGIN SCREEN -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="icon">🔒</div>
+    <h2>Dashboard Patrimonial</h2>
+    <p>Acceso privado — Ingresa tus credenciales</p>
+    <input type="text" class="login-input" id="loginUser" placeholder="Usuario" autocomplete="username">
+    <input type="password" class="login-input" id="loginPass" placeholder="Contraseña" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <div class="login-error" id="loginError">Usuario o contraseña incorrectos</div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMACIÓN -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3 id="modalTitle">¿Eliminar reporte?</h3>
+    <p id="modalText">Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-danger" id="modalConfirmBtn" onclick="confirmModalAction()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="header" style="display:none;" id="mainHeader">
+  <button class="logout-btn" onclick="doLogout()">🔒 Cerrar sesión</button>
   <div class="header-label">Dashboard Patrimonial Privado</div>
   <h1>Seguimiento de Inversiones</h1>
   <div class="header-meta">
@@ -438,13 +628,13 @@
   </div>
 </div>
 
-<div class="content">
+<div class="content" style="display:none;" id="mainContent">
 
   <!-- DISTRIBUCIÓN ACTUAL -->
   <div class="section">
     <div class="section-label">Estructura desde mayo 2026</div>
     <h2>Distribución actual de tu patrimonio</h2>
-    
+
     <table class="fund-table">
       <thead>
         <tr>
@@ -455,9 +645,7 @@
           <th>Monto base</th>
         </tr>
       </thead>
-      <tbody id="fundsTable">
-        <!-- Se llena por JS -->
-      </tbody>
+      <tbody id="fundsTable"></tbody>
     </table>
     <p style="font-size:11.5px;color:var(--text-light);margin-top:12px;">
       💡 Las tasas esperadas son las proyecciones conservadoras (escenario moderado). Los valores de "Monto base" son los iniciales post-reestructuración de abril.
@@ -468,10 +656,8 @@
   <div class="section">
     <div class="section-label">Proyecciones automáticas</div>
     <h2>Crecimiento esperado por fondo (365 días)</h2>
-    <div class="proj-grid" id="projectionGrid">
-      <!-- Se llena por JS -->
-    </div>
-    
+    <div class="proj-grid" id="projectionGrid"></div>
+
     <div style="background:#f9f6f1;border-radius:10px;padding:20px;margin-top:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <span style="font-size:13px;color:var(--text-light);">Proyección total patrimonio (moderado)</span>
@@ -491,32 +677,17 @@
   <div class="section">
     <div class="section-label">Reporte mensual</div>
     <h2>Registra el valor real de tus fondos</h2>
-    
-    <div class="month-selector" id="monthSelector">
-      <button class="month-btn active" data-month="0">Mayo 2026</button>
-      <button class="month-btn" data-month="1">Junio 2026</button>
-      <button class="month-btn" data-month="2">Julio 2026</button>
-      <button class="month-btn" data-month="3">Agosto 2026</button>
-      <button class="month-btn" data-month="4">Septiembre 2026</button>
-      <button class="month-btn" data-month="5">Octubre 2026</button>
-      <button class="month-btn" data-month="6">Noviembre 2026</button>
-      <button class="month-btn" data-month="7">Diciembre 2026</button>
-      <button class="month-btn" data-month="8">Enero 2027</button>
-      <button class="month-btn" data-month="9">Febrero 2027</button>
-      <button class="month-btn" data-month="10">Marzo 2027</button>
-      <button class="month-btn" data-month="11">Abril 2027</button>
-    </div>
+
+    <div class="month-selector" id="monthSelector"></div>
 
     <div id="alertBox" class="alert hidden"></div>
 
     <div class="report-form">
       <h3 id="formTitle">Reporte Mayo 2026</h3>
-      <div class="form-grid" id="formGrid">
-        <!-- Se llena por JS -->
-      </div>
+      <div class="form-grid" id="formGrid"></div>
       <div class="form-group" style="max-width:300px;">
         <label>¿Realizaste el aporte de $150.000 este mes?</label>
-        <select id="aporteMensual" style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--white);">
+        <select id="aporteMensual" style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--white);width:100%;">
           <option value="si">Sí, aporté $150.000</option>
           <option value="no">No aporté este mes</option>
           <option value="parcial">Aporté monto diferente</option>
@@ -526,9 +697,10 @@
         <label>Monto aportado (CLP)</label>
         <input type="number" id="aporteParcial" placeholder="Ej: 100000">
       </div>
-      <div style="margin-top:20px;">
-        <button class="btn" onclick="guardarReporte()">Guardar reporte mensual</button>
-        <button class="btn" onclick="calcularAnalisis()" style="background:var(--gold);color:var(--navy);margin-left:10px;">Ver análisis inteligente</button>
+      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn" onclick="guardarReporte()">💾 Guardar reporte mensual</button>
+        <button class="btn btn-secondary" onclick="calcularAnalisis()">📊 Ver análisis inteligente</button>
+        <button class="btn btn-danger btn-small hidden" id="btnEliminar" onclick="eliminarReporte()">🗑️ Eliminar este reporte</button>
       </div>
     </div>
 
@@ -553,10 +725,11 @@
               <th>Tasa esperada</th>
               <th>Estado</th>
               <th>Aporte</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody id="historyBody">
-            <tr><td colspan="8" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>
+            <tr><td colspan="9" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>
           </tbody>
         </table>
       </div>
@@ -566,9 +739,7 @@
     <div style="margin-top:32px;">
       <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:16px;">Evolución del patrimonio</h3>
       <div class="chart-container">
-        <div class="mini-chart" id="evolutionChart">
-          <!-- Barras generadas por JS -->
-        </div>
+        <div class="mini-chart" id="evolutionChart"></div>
       </div>
     </div>
   </div>
@@ -576,6 +747,10 @@
 </div>
 
 <script>
+// CREDENCIALES
+const USUARIO_VALIDO = 'Juanech';
+const PASSWORD_VALIDO = 'Juanech';
+
 // CONFIGURACIÓN INICIAL — Mayo 2026
 const fondos = [
   { id: 'bice_vista', nombre: 'Cuenta vista BICE', institucion: 'BICE', riesgo: 'nulo', tasaAnual: 0, monto: 50000, tipo: 'fijo' },
@@ -593,30 +768,98 @@ const meses = ['Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre
 const anno = ['2026','2026','2026','2026','2026','2026','2026','2026','2027','2027','2027','2027'];
 
 let currentMonth = 0;
-let reportes = JSON.parse(localStorage.getItem('reportesPatrimonio') || '[]');
+let reportes = [];
+let modalCallback = null;
+let editingReport = null;
+
+// LOGIN / LOGOUT
+function doLogin() {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+
+  if (user === USUARIO_VALIDO && pass === PASSWORD_VALIDO) {
+    localStorage.setItem('patrimonioSession', 'active');
+    showDashboard();
+  } else {
+    document.getElementById('loginError').classList.add('show');
+    setTimeout(() => document.getElementById('loginError').classList.remove('show'), 3000);
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem('patrimonioSession');
+  location.reload();
+}
+
+function showDashboard() {
+  document.getElementById('loginOverlay').classList.add('hidden');
+  document.getElementById('mainHeader').style.display = 'block';
+  document.getElementById('mainContent').style.display = 'block';
+  init();
+}
+
+// Verificar sesión al cargar
+if (localStorage.getItem('patrimonioSession') === 'active') {
+  showDashboard();
+}
+
+// Enter en login
+document.getElementById('loginPass').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('loginUser').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') document.getElementById('loginPass').focus();
+});
+
+// MODAL
+function showModal(title, text, confirmText, callback) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalText').textContent = text;
+  document.getElementById('modalConfirmBtn').textContent = confirmText;
+  modalCallback = callback;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+  modalCallback = null;
+}
+
+function confirmModalAction() {
+  if (modalCallback) modalCallback();
+  closeModal();
+}
 
 // INICIALIZAR
 function init() {
+  reportes = JSON.parse(localStorage.getItem('reportesPatrimonio') || '[]');
+  renderMonthSelector();
   renderFundsTable();
   renderProjections();
   renderForm();
   renderHistory();
   renderChart();
-  
-  // Selector de meses
-  document.querySelectorAll('.month-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      currentMonth = parseInt(e.target.dataset.month);
-      document.getElementById('formTitle').textContent = `Reporte ${meses[currentMonth]} ${anno[currentMonth]}`;
-      loadExistingReport();
-    });
-  });
 
   document.getElementById('aporteMensual').addEventListener('change', (e) => {
     document.getElementById('aporteParcialGroup').classList.toggle('hidden', e.target.value !== 'parcial');
   });
+}
+
+function renderMonthSelector() {
+  const container = document.getElementById('monthSelector');
+  container.innerHTML = meses.map((m, i) => 
+    `<button class="month-btn ${i === currentMonth ? 'active' : ''}" data-month="${i}" onclick="selectMonth(${i})">${m} ${anno[i]}</button>`
+  ).join('');
+}
+
+function selectMonth(m) {
+  currentMonth = m;
+  document.querySelectorAll('.month-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === m);
+  });
+  document.getElementById('formTitle').textContent = `Reporte ${meses[currentMonth]} ${anno[currentMonth]}`;
+  document.getElementById('analysisSection').classList.add('hidden');
+  loadExistingReport();
 }
 
 function renderFundsTable() {
@@ -677,19 +920,24 @@ function renderForm() {
 
 function loadExistingReport() {
   const reporte = reportes.find(r => r.mes === currentMonth);
+  const btnEliminar = document.getElementById('btnEliminar');
+
   if (!reporte) {
     fondos.forEach(f => document.getElementById(`val_${f.id}`).value = '');
     document.getElementById('aporteMensual').value = 'si';
     document.getElementById('aporteParcial').value = '';
     document.getElementById('aporteParcialGroup').classList.add('hidden');
+    btnEliminar.classList.add('hidden');
+    editingReport = null;
     return;
   }
-  
+
+  editingReport = reporte;
   fondos.forEach(f => {
     const val = reporte.valores[f.id];
     document.getElementById(`val_${f.id}`).value = val || '';
   });
-  
+
   document.getElementById('aporteMensual').value = reporte.aporteTipo || 'si';
   if (reporte.aporteTipo === 'parcial') {
     document.getElementById('aporteParcial').value = reporte.aporteMonto || '';
@@ -697,32 +945,33 @@ function loadExistingReport() {
   } else {
     document.getElementById('aporteParcialGroup').classList.add('hidden');
   }
+
+  btnEliminar.classList.remove('hidden');
 }
 
 function guardarReporte() {
   const valores = {};
   let totalReportado = 0;
   let hasData = false;
-  
+
   fondos.forEach(f => {
     const val = parseFloat(document.getElementById(`val_${f.id}`).value) || 0;
     if (val > 0) hasData = true;
     valores[f.id] = val;
     totalReportado += val;
   });
-  
+
   if (!hasData) {
     showAlert('Debes ingresar al menos un valor para guardar el reporte.', 'warning');
     return;
   }
-  
+
   const aporteTipo = document.getElementById('aporteMensual').value;
   const aporteMonto = aporteTipo === 'si' ? 150000 : aporteTipo === 'parcial' ? (parseFloat(document.getElementById('aporteParcial').value) || 0) : 0;
-  
-  // Calcular esperado para este mes
+
   const mesesTranscurridos = currentMonth + 1;
   const totalEsperado = calcularEsperadoAcumulado(mesesTranscurridos, aporteMonto);
-  
+
   const reporte = {
     mes: currentMonth,
     mesNombre: meses[currentMonth] + ' ' + anno[currentMonth],
@@ -733,37 +982,61 @@ function guardarReporte() {
     aporteMonto,
     fechaGuardado: new Date().toISOString()
   };
-  
-  // Reemplazar si existe
+
   const idx = reportes.findIndex(r => r.mes === currentMonth);
   if (idx >= 0) reportes[idx] = reporte;
   else reportes.push(reporte);
-  
+
   reportes.sort((a,b) => a.mes - b.mes);
   localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
-  
-  showAlert(`✅ Reporte de ${meses[currentMonth]} guardado. Total reportado: $${totalReportado.toLocaleString('es-CL')}`, 'success');
+
+  const action = idx >= 0 ? 'actualizado' : 'guardado';
+  showAlert(`✅ Reporte de ${meses[currentMonth]} ${action}. Total: $${totalReportado.toLocaleString('es-CL')}`, 'success');
+
+  editingReport = reporte;
+  document.getElementById('btnEliminar').classList.remove('hidden');
   renderHistory();
   renderChart();
 }
 
+function eliminarReporte() {
+  showModal(
+    '¿Eliminar reporte?',
+    `Estás a punto de eliminar el reporte de ${meses[currentMonth]} ${anno[currentMonth]}. Esta acción no se puede deshacer.`,
+    'Eliminar',
+    () => {
+      reportes = reportes.filter(r => r.mes !== currentMonth);
+      localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
+      loadExistingReport();
+      renderHistory();
+      renderChart();
+      document.getElementById('analysisSection').classList.add('hidden');
+      showAlert(`Reporte de ${meses[currentMonth]} eliminado.`, 'info');
+    }
+  );
+}
+
+function editarReporte(mesIndex) {
+  selectMonth(mesIndex);
+  window.scrollTo({ top: document.querySelector('.report-form').offsetTop - 100, behavior: 'smooth' });
+  showAlert(`✏️ Editando reporte de ${meses[mesIndex]}. Modifica los valores y guarda.`, 'info');
+}
+
 function calcularEsperadoAcumulado(mesesTranscurridos, aporteMensual) {
-  // Fórmula: base * (1 + tasaMensual)^meses + aportes acumulados con intereses parciales
   let total = 0;
   fondos.forEach(f => {
     const tasaMensual = f.tasaAnual / 100 / 12;
     const valorEsperado = f.monto * Math.pow(1 + tasaMensual, mesesTranscurridos);
     total += valorEsperado;
   });
-  
-  // Aportes mensuales acumulados (asumiendo que van a Digital Balanceado ~14% anual)
+
   if (aporteMensual > 0) {
-    const tasaAporte = 0.14 / 12; // Digital Balanceado
+    const tasaAporte = 0.14 / 12;
     for (let i = 0; i < mesesTranscurridos; i++) {
       total += aporteMensual * Math.pow(1 + tasaAporte, mesesTranscurridos - i);
     }
   }
-  
+
   return Math.round(total);
 }
 
@@ -773,14 +1046,13 @@ function calcularAnalisis() {
     showAlert('Primero guarda un reporte para este mes para ver el análisis.', 'warning');
     return;
   }
-  
+
   const section = document.getElementById('analysisSection');
   const content = document.getElementById('analysisContent');
   section.classList.remove('hidden');
-  
+
   let html = '<div class="analysis-grid">';
-  
-  // Análisis por fondo
+
   fondos.forEach(f => {
     if (f.tasaAnual === 0) return;
     const real = reporte.valores[f.id] || 0;
@@ -789,11 +1061,11 @@ function calcularAnalisis() {
     const esperado = f.monto * Math.pow(1 + tasaMensualEsperada, mesesTranscurridos);
     const diferencia = real - esperado;
     const tasaRealAnualizada = real > 0 ? ((real / f.monto) - 1) * (12 / mesesTranscurridos) * 100 : 0;
-    
+
     let estado = 'ok';
     let color = 'var(--gold-light)';
     let mensaje = 'Dentro de lo esperado';
-    
+
     if (diferencia > esperado * 0.05) {
       estado = 'excelente';
       color = 'var(--green)';
@@ -803,7 +1075,7 @@ function calcularAnalisis() {
       color = 'var(--red)';
       mensaje = '⚠️ Por debajo de lo esperado';
     }
-    
+
     html += `
       <div class="analysis-item">
         <div class="label">${f.nombre}</div>
@@ -817,14 +1089,13 @@ function calcularAnalisis() {
       </div>
     `;
   });
-  
-  // Análisis global
+
   const totalReal = reporte.totalReportado;
   const totalEsperado = reporte.totalEsperado;
   const difGlobal = totalReal - totalEsperado;
   const tasaGlobalReal = ((totalReal / 7524819) - 1) * (12 / (currentMonth + 1)) * 100;
-  const tasaGlobalEsperada = 10.9; // Aproximado del escenario moderado
-  
+  const tasaGlobalEsperada = 10.9;
+
   html += `
     <div class="analysis-item" style="border:2px solid var(--gold);">
       <div class="label">📈 RESUMEN GLOBAL</div>
@@ -840,34 +1111,32 @@ function calcularAnalisis() {
       </div>
     </div>
   `;
-  
+
   html += '</div>';
   content.innerHTML = html;
-  
-  // Scroll al análisis
   section.scrollIntoView({ behavior: 'smooth' });
 }
 
 function renderHistory() {
   const tbody = document.getElementById('historyBody');
   if (reportes.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>';
     return;
   }
-  
+
   tbody.innerHTML = reportes.map(r => {
     const dif = r.totalReportado - r.totalEsperado;
     const difPct = r.totalEsperado > 0 ? (dif / r.totalEsperado * 100).toFixed(1) : 0;
     const tasaReal = ((r.totalReportado / 7524819) - 1) * (12 / (r.mes + 1)) * 100;
-    
+
     let statusClass = 'status-ok';
     let statusText = 'Normal';
-    
+
     if (difPct > 5) { statusClass = 'status-excelente'; statusText = 'Excelente 🚀'; }
     else if (difPct > 2) { statusClass = 'status-bien'; statusText = 'Bien 👍'; }
     else if (difPct < -5) { statusClass = 'status-muy-bajo'; statusText = 'Muy bajo ⚠️'; }
     else if (difPct < -2) { statusClass = 'status-bajo'; statusText = 'Bajo 📉'; }
-    
+
     return `
       <tr>
         <td><strong>${r.mesNombre}</strong></td>
@@ -878,9 +1147,29 @@ function renderHistory() {
         <td class="num">~10.9%</td>
         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
         <td>${r.aporteMonto > 0 ? '$' + r.aporteMonto.toLocaleString('es-CL') : '—'}</td>
+        <td>
+          <button class="btn btn-small btn-secondary" onclick="editarReporte(${r.mes})" title="Editar">✏️</button>
+          <button class="btn btn-small btn-danger" onclick="eliminarDesdeHistorial(${r.mes})" title="Eliminar">🗑️</button>
+        </td>
       </tr>
     `;
   }).join('');
+}
+
+function eliminarDesdeHistorial(mes) {
+  showModal(
+    '¿Eliminar reporte?',
+    `¿Eliminar el reporte de ${meses[mes]} ${anno[mes]}? Esta acción no se puede deshacer.`,
+    'Eliminar',
+    () => {
+      reportes = reportes.filter(r => r.mes !== mes);
+      localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
+      if (currentMonth === mes) loadExistingReport();
+      renderHistory();
+      renderChart();
+      showAlert(`Reporte de ${meses[mes]} eliminado.`, 'info');
+    }
+  );
 }
 
 function renderChart() {
@@ -889,18 +1178,18 @@ function renderChart() {
     chart.innerHTML = '<div style="text-align:center;color:var(--text-light);padding:40px;">Ingresa tu primer reporte para ver la evolución</div>';
     return;
   }
-  
+
   const maxVal = Math.max(...reportes.map(r => r.totalReportado), 9000000);
   const minVal = 7000000;
-  
+
   chart.innerHTML = reportes.map((r, i) => {
     const height = ((r.totalReportado - minVal) / (maxVal - minVal)) * 100;
     const barHeight = Math.max(height, 5);
     const dif = r.totalReportado - r.totalEsperado;
     const color = dif >= 0 ? 'var(--green)' : dif < -r.totalEsperado*0.03 ? 'var(--red)' : 'var(--gold)';
-    
+
     return `
-      <div class="bar" style="height:${barHeight}%;background:${color};">
+      <div class="bar" style="height:${barHeight}%;background:${color};" title="${r.mesNombre}: $${r.totalReportado.toLocaleString('es-CL')}">
         <div class="bar-label">${meses[r.mes].substring(0,3)}</div>
       </div>
     `;
@@ -913,9 +1202,6 @@ function showAlert(msg, type) {
   alert.textContent = msg;
   setTimeout(() => alert.classList.add('hidden'), 5000);
 }
-
-// Inicializar al cargar
-init();
 </script>
 
 </body>
