@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Patrimonial — Mayo 2026</title>
+<title>Dashboard Patrimonial — Juanech</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
     --navy: #0f1e35;
@@ -16,6 +17,7 @@
     --green-pale: #e0f7ef;
     --red: #e05c5c;
     --red-pale: #fde8e8;
+    --blue: #4a90d9;
     --text: #1a1a2e;
     --text-light: #5a6a7e;
     --border: #d9cfc0;
@@ -30,7 +32,7 @@
     line-height: 1.6;
   }
 
-  /* LOGIN SCREEN */
+  /* ─── LOGIN ─── */
   .login-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -41,11 +43,7 @@
     z-index: 10000;
     transition: opacity 0.5s, visibility 0.5s;
   }
-  .login-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
+  .login-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
   .login-box {
     background: var(--white);
     border-radius: 16px;
@@ -56,64 +54,31 @@
     text-align: center;
   }
   .login-box .icon {
-    width: 64px;
-    height: 64px;
+    width: 64px; height: 64px;
     background: linear-gradient(135deg, var(--gold), var(--gold-light));
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     margin: 0 auto 24px;
     font-size: 28px;
   }
-  .login-box h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    color: var(--navy);
-    margin-bottom: 8px;
-  }
-  .login-box p {
-    font-size: 13px;
-    color: var(--text-light);
-    margin-bottom: 28px;
-  }
+  .login-box h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 8px; }
+  .login-box p { font-size: 13px; color: var(--text-light); margin-bottom: 28px; }
   .login-input {
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-size: 15px;
-    margin-bottom: 12px;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
+    width: 100%; padding: 14px 16px; border: 1px solid var(--border);
+    border-radius: 10px; font-size: 15px; margin-bottom: 12px;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
   }
-  .login-input:focus {
-    outline: none;
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
-  }
+  .login-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.15); }
   .login-btn {
-    width: 100%;
-    padding: 14px;
-    background: var(--navy);
-    color: var(--gold-light);
-    border: none;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
+    width: 100%; padding: 14px; background: var(--navy); color: var(--gold-light);
+    border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; margin-top: 8px;
   }
   .login-btn:hover { background: var(--navy-mid); transform: translateY(-1px); }
-  .login-error {
-    color: var(--red);
-    font-size: 13px;
-    margin-top: 12px;
-    display: none;
-  }
+  .login-error { color: var(--red); font-size: 13px; margin-top: 12px; display: none; }
   .login-error.show { display: block; }
 
+  /* ─── HEADER ─── */
   .header {
     background: var(--navy);
     color: var(--white);
@@ -130,62 +95,71 @@
     background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
   }
   .header-label {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 500;
-    margin-bottom: 12px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); font-weight: 500; margin-bottom: 12px;
   }
-  .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-  .header-meta {
-    margin-top: 20px;
-    display: flex;
-    gap: 32px;
-    flex-wrap: wrap;
-  }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; line-height: 1.2; }
+  .header-meta { margin-top: 20px; display: flex; gap: 32px; flex-wrap: wrap; }
   .header-meta-item span {
-    display: block;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 4px;
+    display: block; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); margin-bottom: 4px;
   }
-  .header-meta-item strong {
-    font-size: 14px;
-    color: rgba(255,255,255,0.9);
-    font-weight: 500;
-  }
+  .header-meta-item strong { font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; }
   .logout-btn {
-    position: absolute;
-    top: 20px;
-    right: 24px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.7);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
+    position: absolute; top: 20px; right: 24px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7); padding: 8px 16px; border-radius: 20px;
+    font-size: 12px; cursor: pointer; transition: all 0.2s;
   }
-  .logout-btn:hover {
-    background: rgba(255,255,255,0.2);
-    color: var(--white);
-  }
+  .logout-btn:hover { background: rgba(255,255,255,0.2); color: var(--white); }
 
+  /* ─── TABS ─── */
+  .tab-nav-wrapper {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(15,30,53,0.06);
+  }
+  .tab-nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: flex;
+    gap: 4px;
+  }
+  .tab-btn {
+    padding: 16px 28px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-light);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+  .tab-btn:hover:not(.active) { color: var(--navy); background: rgba(201,168,76,0.05); }
+  .tab-btn .tab-icon { font-size: 16px; }
+
+  /* ─── CONTENT LAYOUT ─── */
   .content {
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px 48px 60px;
   }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
 
+  /* ─── SHARED COMPONENTS ─── */
   .section {
     margin-bottom: 48px;
     background: var(--white);
@@ -194,55 +168,29 @@
     padding: 32px;
   }
   .section-label {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 600;
-    margin-bottom: 8px;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); font-weight: 600; margin-bottom: 8px;
   }
   .section h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--navy);
-    margin-bottom: 24px;
+    font-family: 'Playfair Display', serif; font-size: 24px;
+    font-weight: 600; color: var(--navy); margin-bottom: 24px;
   }
 
-  .fund-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13.5px;
-    margin-bottom: 16px;
-  }
+  .fund-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 16px; }
   .fund-table thead th {
-    background: var(--navy);
-    color: rgba(255,255,255,0.7);
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-weight: 500;
-    padding: 12px 16px;
-    text-align: left;
+    background: var(--navy); color: rgba(255,255,255,0.7);
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 500; padding: 12px 16px; text-align: left;
   }
   .fund-table thead th:last-child { text-align: right; }
   .fund-table tbody tr { border-bottom: 1px solid #ede8e0; }
-  .fund-table tbody td {
-    padding: 14px 16px;
-    vertical-align: middle;
-  }
+  .fund-table tbody td { padding: 14px 16px; vertical-align: middle; }
   .fund-table tbody td:last-child { text-align: right; }
   .fund-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.015); }
 
   .fund-name { font-weight: 600; color: var(--navy); }
   .fund-desc { font-size: 11.5px; color: var(--text-light); display: block; margin-top: 2px; }
-  .tag {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-  }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
   .tag-bajo { background: #e0f7ef; color: #1a8a5a; }
   .tag-medio { background: #fff4e0; color: #b07d00; }
   .tag-alto { background: #fde8e8; color: #c0392b; }
@@ -252,334 +200,364 @@
   .num-pos { color: #1a8a5a; }
   .num-neg { color: #c0392b; }
 
-  .total-row td {
-    background: var(--navy) !important;
-    color: var(--white) !important;
-    font-weight: 600;
-    padding: 14px 16px;
-  }
+  .total-row td { background: var(--navy) !important; color: var(--white) !important; font-weight: 600; padding: 14px 16px; }
 
-  .proj-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-  }
+  .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
   .proj-card {
-    background: #faf8f5;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    border-top: 3px solid var(--gold);
+    background: #faf8f5; border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px; border-top: 3px solid var(--gold);
   }
   .proj-card.green-border { border-top-color: var(--green); }
   .proj-card.red-border { border-top-color: var(--red); }
-  .proj-card-title {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text-light);
-    margin-bottom: 8px;
-  }
-  .proj-card-val {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--navy);
-  }
-  .proj-card-sub {
-    font-size: 12px;
-    color: var(--text-light);
-    margin-top: 4px;
-  }
-  .proj-card-gain {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--green);
-    margin-top: 6px;
-  }
+  .proj-card-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-light); margin-bottom: 8px; }
+  .proj-card-val { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--navy); }
+  .proj-card-sub { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+  .proj-card-gain { font-size: 13px; font-weight: 600; color: var(--green); margin-top: 6px; }
 
   .report-form {
     background: linear-gradient(135deg, #f9f6f1, #fff);
-    border: 2px dashed var(--border);
-    border-radius: 12px;
-    padding: 28px;
-    margin-bottom: 24px;
+    border: 2px dashed var(--border); border-radius: 12px; padding: 28px; margin-bottom: 24px;
   }
-  .report-form h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    color: var(--navy);
-    margin-bottom: 20px;
-  }
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  .form-group label {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text-light);
-    margin-bottom: 6px;
-    font-weight: 500;
-  }
-  .form-group input, .form-group select {
-    padding: 10px 14px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    color: var(--text);
-    background: var(--white);
-  }
-  .form-group input:focus, .form-group select:focus {
-    outline: none;
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
-  }
-  .btn {
-    background: var(--navy);
-    color: var(--gold-light);
-    border: none;
-    padding: 12px 28px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
+  .report-form h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 20px; }
+
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .form-group { display: flex; flex-direction: column; }
+  .form-group label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-light); margin-bottom: 6px; font-weight: 500; }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--white);
     transition: all 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .btn {
+    background: var(--navy); color: var(--gold-light); border: none;
+    padding: 12px 28px; border-radius: 8px; font-size: 14px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
   }
   .btn:hover { background: var(--navy-mid); transform: translateY(-1px); }
   .btn-secondary {
-    background: transparent;
-    color: var(--text-light);
-    border: 1px solid var(--border);
-    margin-left: 8px;
+    background: transparent; color: var(--text-light);
+    border: 1px solid var(--border); margin-left: 8px;
   }
-  .btn-secondary:hover { background: #f5f5f5; }
-  .btn-danger {
-    background: var(--red);
-    color: var(--white);
-    margin-left: 8px;
-  }
+  .btn-secondary:hover { background: #f5f5f5; transform: none; }
+  .btn-danger { background: var(--red); color: var(--white); margin-left: 8px; }
   .btn-danger:hover { background: #c0392b; }
-  .btn-small {
-    padding: 6px 14px;
-    font-size: 12px;
-  }
+  .btn-small { padding: 6px 14px; font-size: 12px; }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:hover { background: var(--gold-light); }
 
-  .history-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12.5px;
-    margin-top: 16px;
-  }
+  .history-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 16px; }
   .history-table th {
-    background: var(--navy);
-    color: rgba(255,255,255,0.7);
-    padding: 10px 12px;
-    text-align: left;
-    font-size: 10px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: 500;
+    background: var(--navy); color: rgba(255,255,255,0.7);
+    padding: 10px 12px; text-align: left;
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 500;
   }
-  .history-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #ede8e0;
-  }
+  .history-table td { padding: 10px 12px; border-bottom: 1px solid #ede8e0; }
   .history-table tr:nth-child(even) { background: rgba(0,0,0,0.015); }
   .history-table tr:hover { background: rgba(201,168,76,0.05); }
 
-  .status-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-  }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
   .status-excelente { background: #e0f7ef; color: #1a8a5a; }
   .status-bien { background: #e8f4e0; color: #3a7a2a; }
   .status-ok { background: #fff4e0; color: #b07d00; }
   .status-bajo { background: #fde8e8; color: #c0392b; }
   .status-muy-bajo { background: #fde8e8; color: #a03030; border: 1px solid #e05c5c; }
 
-  .analysis-box {
-    background: var(--navy);
-    color: var(--white);
-    border-radius: 12px;
-    padding: 24px 28px;
-    margin-top: 24px;
-  }
-  .analysis-box h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    color: var(--gold-light);
-    margin-bottom: 16px;
-  }
-  .analysis-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  .analysis-item {
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-    padding: 16px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .analysis-item .label {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 8px;
-  }
-  .analysis-item .value {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--white);
-  }
-  .analysis-item .sub {
-    font-size: 12px;
-    color: rgba(255,255,255,0.5);
-    margin-top: 4px;
-  }
+  .analysis-box { background: var(--navy); color: var(--white); border-radius: 12px; padding: 24px 28px; margin-top: 24px; }
+  .analysis-box h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--gold-light); margin-bottom: 16px; }
+  .analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+  .analysis-item { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 16px; border: 1px solid rgba(255,255,255,0.1); }
+  .analysis-item .label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+  .analysis-item .value { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--white); }
+  .analysis-item .sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
 
-  .alert {
-    padding: 14px 18px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    display: none;
-  }
+  .alert { padding: 14px 18px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; display: none; }
   .alert-success { background: var(--green-pale); color: #1a8a5a; border-left: 4px solid var(--green); display: block; }
   .alert-warning { background: #fff4e0; color: #b07d00; border-left: 4px solid var(--gold); display: block; }
   .alert-danger { background: var(--red-pale); color: #c0392b; border-left: 4px solid var(--red); display: block; }
-  .alert-info { background: #e8f0ff; color: #2a5a9e; border-left: 4px solid #4a90d9; display: block; }
+  .alert-info { background: #e8f0ff; color: #2a5a9e; border-left: 4px solid var(--blue); display: block; }
 
-  .month-selector {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
+  .month-selector { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
   .month-btn {
-    padding: 8px 16px;
-    border: 1px solid var(--border);
-    background: var(--white);
-    border-radius: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
+    padding: 8px 16px; border: 1px solid var(--border); background: var(--white);
+    border-radius: 20px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
   }
   .month-btn:hover { border-color: var(--gold); }
-  .month-btn.active {
-    background: var(--navy);
-    color: var(--gold-light);
-    border-color: var(--navy);
-  }
+  .month-btn.active { background: var(--navy); color: var(--gold-light); border-color: var(--navy); }
 
-  .chart-container {
-    height: 300px;
-    margin: 24px 0;
-    position: relative;
-  }
-  .mini-chart {
-    display: flex;
-    align-items: flex-end;
-    gap: 4px;
-    height: 200px;
-    padding: 20px 0;
-    border-bottom: 2px solid var(--border);
-  }
-  .bar {
-    flex: 1;
-    background: var(--gold);
-    border-radius: 4px 4px 0 0;
-    min-height: 4px;
-    position: relative;
-    transition: all 0.3s;
-    cursor: pointer;
-  }
+  .chart-container { height: 300px; margin: 24px 0; position: relative; }
+  .mini-chart { display: flex; align-items: flex-end; gap: 4px; height: 200px; padding: 20px 0; border-bottom: 2px solid var(--border); }
+  .bar { flex: 1; background: var(--gold); border-radius: 4px 4px 0 0; min-height: 4px; position: relative; transition: all 0.3s; cursor: pointer; }
   .bar:hover { opacity: 0.8; }
-  .bar-label {
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-45deg);
-    font-size: 10px;
-    color: var(--text-light);
-    white-space: nowrap;
-  }
+  .bar-label { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%) rotate(-45deg); font-size: 10px; color: var(--text-light); white-space: nowrap; }
 
   .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(15,30,53,0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s;
   }
-  .modal-overlay.show {
-    opacity: 1;
-    visibility: visible;
-  }
+  .modal-overlay.show { opacity: 1; visibility: visible; }
   .modal-box {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 32px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-    transform: translateY(20px);
-    transition: transform 0.3s;
+    background: var(--white); border-radius: 16px; padding: 32px;
+    width: 90%; max-width: 500px; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    transform: translateY(20px); transition: transform 0.3s;
   }
-  .modal-overlay.show .modal-box {
-    transform: translateY(0);
-  }
-  .modal-box h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    color: var(--navy);
-    margin-bottom: 8px;
-  }
-  .modal-box p {
-    font-size: 13px;
-    color: var(--text-light);
-    margin-bottom: 24px;
-  }
-  .modal-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-  }
+  .modal-overlay.show .modal-box { transform: translateY(0); }
+  .modal-box h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 8px; }
+  .modal-box p { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
+  .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
 
   .hidden { display: none !important; }
+
+  /* ─── CAJA DIARIA: KPI BAR ─── */
+  .cc-kpi-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--navy);
+    border-radius: 14px;
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .kpi-card.kpi-gold::before { background: radial-gradient(circle, rgba(201,168,76,0.25) 0%, transparent 70%); }
+  .kpi-card.kpi-green::before { background: radial-gradient(circle, rgba(46,204,138,0.2) 0%, transparent 70%); }
+  .kpi-label {
+    font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); margin-bottom: 10px; font-weight: 500;
+  }
+  .kpi-value {
+    font-family: 'Playfair Display', serif; font-size: 34px;
+    font-weight: 700; color: var(--white); line-height: 1;
+  }
+  .kpi-card.kpi-gold .kpi-value { color: var(--gold-light); }
+  .kpi-card.kpi-green .kpi-value { color: #5effc0; }
+  .kpi-sub { font-size: 11.5px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+  .kpi-delta {
+    display: inline-block;
+    font-size: 12px; font-weight: 600; padding: 3px 10px;
+    border-radius: 12px; margin-top: 10px;
+  }
+  .kpi-delta.pos { background: rgba(46,204,138,0.2); color: #5effc0; }
+  .kpi-delta.neg { background: rgba(224,92,92,0.2); color: #ffaaaa; }
+
+  /* ─── CAJA DIARIA: ACCOUNT CARDS ─── */
+  .cc-accounts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .account-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 24px 20px;
+    border-top: 4px solid var(--gold);
+    transition: box-shadow 0.2s;
+    position: relative;
+  }
+  .account-card:hover { box-shadow: 0 4px 20px rgba(15,30,53,0.08); }
+  .account-card.acc-bice { border-top-color: var(--navy); }
+  .account-card.acc-match { border-top-color: var(--gold); }
+  .account-card.acc-prex { border-top-color: var(--green); }
+  .account-name {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-light); margin-bottom: 8px; font-weight: 600;
+  }
+  .account-badge {
+    display: inline-block; font-size: 10px; padding: 2px 8px;
+    border-radius: 10px; margin-bottom: 10px; font-weight: 600;
+  }
+  .badge-bice { background: rgba(15,30,53,0.1); color: var(--navy); }
+  .badge-match { background: rgba(201,168,76,0.15); color: #8a6400; }
+  .badge-prex { background: rgba(46,204,138,0.15); color: #1a8a5a; }
+  .account-balance {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 700; color: var(--navy);
+    line-height: 1;
+  }
+  .account-meta { font-size: 11px; color: var(--text-light); margin-top: 8px; }
+  .account-actions { margin-top: 14px; display: flex; gap: 8px; }
+  .btn-account { 
+    padding: 5px 12px; font-size: 11px; border-radius: 6px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-light); cursor: pointer; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif; font-weight: 500;
+  }
+  .btn-account:hover { border-color: var(--gold); color: var(--navy); }
+  .inline-balance-edit {
+    display: none; margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .inline-balance-edit.visible { display: block; }
+  .inline-balance-edit label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-light); font-weight: 500; display: block; margin-bottom: 6px; }
+  .inline-balance-edit input {
+    width: 100%; padding: 8px 12px; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 13px; font-family: 'DM Mono', monospace;
+  }
+  .inline-balance-edit input:focus { outline: none; border-color: var(--gold); }
+  .inline-balance-edit .btn-row { display: flex; gap: 6px; margin-top: 8px; }
+  .btn-xs { padding: 5px 12px; font-size: 11px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; border: none; }
+  .btn-xs.primary { background: var(--navy); color: var(--gold-light); }
+  .btn-xs.secondary { background: transparent; border: 1px solid var(--border); color: var(--text-light); }
+
+  /* ─── CAJA DIARIA: MOVEMENT FORM ─── */
+  .movement-form {
+    background: linear-gradient(135deg, #f9f6f1, #fff);
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .movement-form h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; color: var(--navy); margin-bottom: 20px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .tipo-badge-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tipo-btn {
+    padding: 8px 20px; border-radius: 20px; border: 2px solid var(--border);
+    background: var(--white); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    color: var(--text-light);
+  }
+  .tipo-btn.active-ingreso { background: var(--green-pale); border-color: var(--green); color: #1a8a5a; }
+  .tipo-btn.active-gasto { background: var(--red-pale); border-color: var(--red); color: #c0392b; }
+  .tipo-btn.active-transferencia { background: #e8f0ff; border-color: var(--blue); color: #2a5a9e; }
+
+  /* ─── CAJA DIARIA: PERIOD SELECTOR ─── */
+  .period-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .period-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-light); font-weight: 500; margin-right: 4px; }
+  .period-btn {
+    padding: 7px 16px; border: 1px solid var(--border);
+    background: var(--white); border-radius: 20px; font-size: 12px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif; color: var(--text-light);
+  }
+  .period-btn.active { background: var(--navy); color: var(--gold-light); border-color: var(--navy); }
+
+  /* ─── CAJA DIARIA: CHARTS ─── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .chart-box {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .chart-box.full-width { grid-column: 1 / -1; }
+  .chart-box h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 600; color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .chart-box .chart-subtitle {
+    font-size: 11px; color: var(--text-light); margin-bottom: 18px;
+  }
+  .chart-canvas-wrap { position: relative; height: 220px; }
+  .chart-canvas-wrap.tall { height: 280px; }
+  .chart-empty {
+    display: flex; align-items: center; justify-content: center;
+    height: 100%; color: var(--text-light); font-size: 13px;
+    flex-direction: column; gap: 8px;
+    text-align: center;
+  }
+  .chart-empty span { font-size: 28px; }
+
+  /* ─── CAJA DIARIA: MOVEMENTS TABLE ─── */
+  .movements-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .movements-table th {
+    background: var(--navy); color: rgba(255,255,255,0.7);
+    padding: 10px 14px; text-align: left;
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 500;
+  }
+  .movements-table td { padding: 12px 14px; border-bottom: 1px solid #ede8e0; vertical-align: middle; }
+  .movements-table tr:nth-child(even) { background: rgba(0,0,0,0.015); }
+  .movements-table tr:hover { background: rgba(201,168,76,0.05); }
+  .mov-type-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 10px;
+    font-size: 11px; font-weight: 600;
+  }
+  .mov-ingreso { background: var(--green-pale); color: #1a8a5a; }
+  .mov-gasto { background: var(--red-pale); color: #c0392b; }
+  .mov-transferencia { background: #e8f0ff; color: #2a5a9e; }
+  .cc-dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: 5px; vertical-align: middle;
+  }
+  .dot-bice { background: var(--navy); }
+  .dot-match { background: var(--gold); }
+  .dot-prex { background: var(--green); }
+
+  .filter-row {
+    display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .filter-row select {
+    padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; background: var(--white);
+    color: var(--text); cursor: pointer;
+  }
+  .filter-row select:focus { outline: none; border-color: var(--gold); }
+
+  .empty-state {
+    text-align: center; padding: 40px 20px;
+    color: var(--text-light); font-size: 13px;
+  }
+  .empty-state .es-icon { font-size: 32px; margin-bottom: 10px; }
+
+  @media (max-width: 768px) {
+    .header { padding: 28px 24px 24px; }
+    .content { padding: 24px 20px 40px; }
+    .tab-nav { padding: 0 20px; }
+    .cc-kpi-bar { grid-template-columns: 1fr; }
+    .cc-accounts { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .kpi-value { font-size: 26px; }
+    .header h1 { font-size: 26px; }
+  }
 
   @media print {
     body { background: white; }
     .section { break-inside: avoid; }
-    .login-overlay, .logout-btn, .modal-overlay { display: none !important; }
+    .login-overlay, .logout-btn, .modal-overlay, .tab-nav-wrapper { display: none !important; }
   }
 </style>
-<base target="_blank">
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- ─── LOGIN ─── -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
     <div class="icon">🔒</div>
@@ -592,29 +570,30 @@
   </div>
 </div>
 
-<!-- MODAL CONFIRMACIÓN -->
+<!-- ─── MODAL CONFIRMACIÓN ─── -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-box">
-    <h3 id="modalTitle">¿Eliminar reporte?</h3>
+    <h3 id="modalTitle">Confirmar acción</h3>
     <p id="modalText">Esta acción no se puede deshacer.</p>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-danger" id="modalConfirmBtn" onclick="confirmModalAction()">Eliminar</button>
+      <button class="btn btn-danger" id="modalConfirmBtn" onclick="confirmModalAction()">Confirmar</button>
     </div>
   </div>
 </div>
 
+<!-- ─── HEADER ─── -->
 <div class="header" style="display:none;" id="mainHeader">
   <button class="logout-btn" onclick="doLogout()">🔒 Cerrar sesión</button>
   <div class="header-label">Dashboard Patrimonial Privado</div>
-  <h1>Seguimiento de Inversiones</h1>
+  <h1 id="mainTitle">Seguimiento Financiero Personal</h1>
   <div class="header-meta">
     <div class="header-meta-item">
       <span>Inicio seguimiento</span>
       <strong>Mayo 2026</strong>
     </div>
     <div class="header-meta-item">
-      <span>Patrimonio inicial</span>
+      <span>Patrimonio inicial inv.</span>
       <strong>$7.524.819</strong>
     </div>
     <div class="header-meta-item">
@@ -628,155 +607,446 @@
   </div>
 </div>
 
+<!-- ─── TAB NAV ─── -->
+<div class="tab-nav-wrapper" style="display:none;" id="tabNavWrapper">
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('inversiones')" id="tabBtnInversiones">
+      <span class="tab-icon">📈</span> Inversiones
+    </button>
+    <button class="tab-btn" onclick="switchTab('caja')" id="tabBtnCaja">
+      <span class="tab-icon">💳</span> Caja Diaria
+    </button>
+  </div>
+</div>
+
+<!-- ─── MAIN CONTENT ─── -->
 <div class="content" style="display:none;" id="mainContent">
 
-  <!-- DISTRIBUCIÓN ACTUAL -->
-  <div class="section">
-    <div class="section-label">Estructura desde mayo 2026</div>
-    <h2>Distribución actual de tu patrimonio</h2>
+  <!-- ══════════ TAB: INVERSIONES ══════════ -->
+  <div id="tabInversiones" class="tab-pane active">
 
-    <table class="fund-table">
-      <thead>
-        <tr>
-          <th>Instrumento</th>
-          <th>Institución</th>
-          <th>Riesgo</th>
-          <th>Tasa esperada</th>
-          <th>Monto base</th>
-        </tr>
-      </thead>
-      <tbody id="fundsTable"></tbody>
-    </table>
-    <p style="font-size:11.5px;color:var(--text-light);margin-top:12px;">
-      💡 Las tasas esperadas son las proyecciones conservadoras (escenario moderado). Los valores de "Monto base" son los iniciales post-reestructuración de abril.
-    </p>
-  </div>
+    <!-- DISTRIBUCIÓN ACTUAL -->
+    <div class="section">
+      <div class="section-label">Estructura desde mayo 2026</div>
+      <h2>Distribución actual de tu patrimonio</h2>
+      <table class="fund-table">
+        <thead>
+          <tr>
+            <th>Instrumento</th>
+            <th>Institución</th>
+            <th>Riesgo</th>
+            <th>Tasa esperada</th>
+            <th style="text-align:right;">Monto base</th>
+          </tr>
+        </thead>
+        <tbody id="fundsTable"></tbody>
+      </table>
+      <p style="font-size:11.5px;color:var(--text-light);margin-top:12px;">
+        💡 Las tasas esperadas son proyecciones conservadoras. Los montos base son los iniciales post-reestructuración de abril.
+      </p>
+    </div>
 
-  <!-- PROYECCIONES -->
-  <div class="section">
-    <div class="section-label">Proyecciones automáticas</div>
-    <h2>Crecimiento esperado por fondo (365 días)</h2>
-    <div class="proj-grid" id="projectionGrid"></div>
-
-    <div style="background:#f9f6f1;border-radius:10px;padding:20px;margin-top:16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <span style="font-size:13px;color:var(--text-light);">Proyección total patrimonio (moderado)</span>
-        <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--navy);">$8.347.363</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:13px;color:var(--text-light);">Proyección total patrimonio (optimista)</span>
-        <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--green);">$8.670.133</span>
-      </div>
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text-light);">
-        Con aportes mensuales de $150.000 × 10 meses + intereses: <strong style="color:var(--navy);">$9.934.863 – $10.270.133</strong>
+    <!-- PROYECCIONES -->
+    <div class="section">
+      <div class="section-label">Proyecciones automáticas</div>
+      <h2>Crecimiento esperado por fondo (365 días)</h2>
+      <div class="proj-grid" id="projectionGrid"></div>
+      <div style="background:#f9f6f1;border-radius:10px;padding:20px;margin-top:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:13px;color:var(--text-light);">Proyección total patrimonio (moderado)</span>
+          <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--navy);">$8.347.363</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:13px;color:var(--text-light);">Proyección total patrimonio (optimista)</span>
+          <span style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--green);">$8.670.133</span>
+        </div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text-light);">
+          Con aportes mensuales de $150.000 × 10 meses + intereses: <strong style="color:var(--navy);">$9.934.863 – $10.270.133</strong>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- REPORTE MENSUAL -->
-  <div class="section">
-    <div class="section-label">Reporte mensual</div>
-    <h2>Registra el valor real de tus fondos</h2>
+    <!-- REPORTE MENSUAL -->
+    <div class="section">
+      <div class="section-label">Reporte mensual</div>
+      <h2>Registra el valor real de tus fondos</h2>
+      <div class="month-selector" id="monthSelector"></div>
+      <div id="alertBox" class="alert hidden"></div>
+      <div class="report-form">
+        <h3 id="formTitle">Reporte Mayo 2026</h3>
+        <div class="form-grid" id="formGrid"></div>
+        <div class="form-group" style="max-width:300px;">
+          <label>¿Realizaste el aporte de $150.000 este mes?</label>
+          <select id="aporteMensual" style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--white);width:100%;">
+            <option value="si">Sí, aporté $150.000</option>
+            <option value="no">No aporté este mes</option>
+            <option value="parcial">Aporté monto diferente</option>
+          </select>
+        </div>
+        <div class="form-group hidden" id="aporteParcialGroup" style="max-width:300px;margin-top:12px;">
+          <label>Monto aportado (CLP)</label>
+          <input type="number" id="aporteParcial" placeholder="Ej: 100000">
+        </div>
+        <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn" onclick="guardarReporte()">💾 Guardar reporte mensual</button>
+          <button class="btn btn-secondary" onclick="calcularAnalisis()">📊 Ver análisis inteligente</button>
+          <button class="btn btn-danger btn-small hidden" id="btnEliminar" onclick="eliminarReporte()">🗑️ Eliminar este reporte</button>
+        </div>
+      </div>
+      <div id="analysisSection" class="analysis-box hidden">
+        <h3>📊 Análisis Inteligente del Mes</h3>
+        <div id="analysisContent"></div>
+      </div>
+      <div style="margin-top:32px;">
+        <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:16px;">Historial de reportes</h3>
+        <div style="overflow-x:auto;">
+          <table class="history-table" id="historyTable">
+            <thead>
+              <tr>
+                <th>Mes</th><th>Total reportado</th><th>Esperado</th>
+                <th>Diferencia</th><th>Tasa real mensual</th>
+                <th>Tasa esperada</th><th>Estado</th><th>Aporte</th><th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody">
+              <tr><td colspan="9" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="margin-top:32px;">
+        <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:16px;">Evolución del patrimonio</h3>
+        <div class="chart-container">
+          <div class="mini-chart" id="evolutionChart"></div>
+        </div>
+      </div>
+    </div>
 
-    <div class="month-selector" id="monthSelector"></div>
+  </div><!-- /tabInversiones -->
 
-    <div id="alertBox" class="alert hidden"></div>
+  <!-- ══════════ TAB: CAJA DIARIA ══════════ -->
+  <div id="tabCaja" class="tab-pane">
 
-    <div class="report-form">
-      <h3 id="formTitle">Reporte Mayo 2026</h3>
-      <div class="form-grid" id="formGrid"></div>
-      <div class="form-group" style="max-width:300px;">
-        <label>¿Realizaste el aporte de $150.000 este mes?</label>
-        <select id="aporteMensual" style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--white);width:100%;">
-          <option value="si">Sí, aporté $150.000</option>
-          <option value="no">No aporté este mes</option>
-          <option value="parcial">Aporté monto diferente</option>
+    <!-- KPI BAR -->
+    <div class="cc-kpi-bar">
+      <div class="kpi-card kpi-gold">
+        <div class="kpi-label">Saldo Total en Cuentas Corrientes</div>
+        <div class="kpi-value" id="kpiTotalCC">$0</div>
+        <div class="kpi-sub">Bice + Match + Prex</div>
+      </div>
+      <div class="kpi-card kpi-green">
+        <div class="kpi-label">Patrimonio Total Consolidado</div>
+        <div class="kpi-value" id="kpiPatrimonioTotal">$0</div>
+        <div class="kpi-sub" id="kpiPatrimonioSub">CC + Inversiones</div>
+      </div>
+    </div>
+
+    <!-- CUENTAS CORRIENTES -->
+    <div class="section" style="padding:24px 32px;">
+      <div class="section-label">Cuentas corrientes</div>
+      <h2 style="margin-bottom:20px;">Saldos por cuenta</h2>
+      <div class="cc-accounts">
+
+        <div class="account-card acc-bice">
+          <div class="account-name">Bice Inversiones</div>
+          <span class="account-badge badge-bice">Cuenta Vista</span>
+          <div class="account-balance num" id="saldoBice">$0</div>
+          <div class="account-meta" id="metaBice">Sin movimientos</div>
+          <div class="account-actions">
+            <button class="btn-account" onclick="toggleBalanceEdit('bice')">⚙ Ajustar saldo base</button>
+          </div>
+          <div class="inline-balance-edit" id="editBice">
+            <label>Nuevo saldo base (CLP)</label>
+            <input type="number" id="editBiceVal" placeholder="Ej: 50000">
+            <div class="btn-row">
+              <button class="btn-xs primary" onclick="setSaldoBase('bice')">Guardar</button>
+              <button class="btn-xs secondary" onclick="toggleBalanceEdit('bice')">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="account-card acc-match">
+          <div class="account-name">Match</div>
+          <span class="account-badge badge-match">Ahorro 24/7</span>
+          <div class="account-balance num" id="saldoMatch">$0</div>
+          <div class="account-meta" id="metaMatch">Sin movimientos</div>
+          <div class="account-actions">
+            <button class="btn-account" onclick="toggleBalanceEdit('match')">⚙ Ajustar saldo base</button>
+          </div>
+          <div class="inline-balance-edit" id="editMatch">
+            <label>Nuevo saldo base (CLP)</label>
+            <input type="number" id="editMatchVal" placeholder="Ej: 550000">
+            <div class="btn-row">
+              <button class="btn-xs primary" onclick="setSaldoBase('match')">Guardar</button>
+              <button class="btn-xs secondary" onclick="toggleBalanceEdit('match')">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="account-card acc-prex">
+          <div class="account-name">Prex</div>
+          <span class="account-badge badge-prex">Billetera digital</span>
+          <div class="account-balance num" id="saldoPrex">$0</div>
+          <div class="account-meta" id="metaPrex">Sin movimientos</div>
+          <div class="account-actions">
+            <button class="btn-account" onclick="toggleBalanceEdit('prex')">⚙ Ajustar saldo base</button>
+          </div>
+          <div class="inline-balance-edit" id="editPrex">
+            <label>Nuevo saldo base (CLP)</label>
+            <input type="number" id="editPrexVal" placeholder="Ej: 0">
+            <div class="btn-row">
+              <button class="btn-xs primary" onclick="setSaldoBase('prex')">Guardar</button>
+              <button class="btn-xs secondary" onclick="toggleBalanceEdit('prex')">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FORMULARIO DE MOVIMIENTO -->
+    <div class="section" style="padding:28px 32px;">
+      <div class="section-label">Registrar movimiento</div>
+      <h2 style="margin-bottom:16px;">Nuevo ingreso, gasto o transferencia</h2>
+
+      <div id="alertCaja" class="alert hidden"></div>
+
+      <!-- Tipo selector -->
+      <div style="margin-bottom:18px;">
+        <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-light);font-weight:500;margin-bottom:10px;">Tipo de movimiento</div>
+        <div class="tipo-badge-row">
+          <button class="tipo-btn active-ingreso" id="tipoBtnIngreso" onclick="setTipo('ingreso')">↑ Ingreso</button>
+          <button class="tipo-btn" id="tipoBtnGasto" onclick="setTipo('gasto')">↓ Gasto</button>
+          <button class="tipo-btn" id="tipoBtnTransferencia" onclick="setTipo('transferencia')">⇄ Transferencia</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="date" id="movFecha">
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <input type="text" id="movDesc" placeholder="Ej: Almuerzo cerca de U">
+        </div>
+        <div class="form-group">
+          <label>Monto (CLP)</label>
+          <input type="number" id="movMonto" placeholder="Ej: 5000" step="100">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label id="cuentaLabel">Cuenta</label>
+          <select id="movCuenta">
+            <option value="bice">Bice</option>
+            <option value="match">Match</option>
+            <option value="prex">Prex</option>
+          </select>
+        </div>
+        <div class="form-group" id="categoriaGroup">
+          <label>Categoría</label>
+          <select id="movCategoria">
+            <option value="Sueldo CVD">Sueldo CVD</option>
+            <option value="Mesada">Mesada</option>
+            <option value="Otros Sueldos">Otros Sueldos</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+        <div class="form-group hidden" id="cuentaDestGroup">
+          <label>Cuenta destino</label>
+          <select id="movCuentaDest">
+            <option value="match">Match</option>
+            <option value="prex">Prex</option>
+            <option value="bice">Bice</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:8px;">
+        <button class="btn" onclick="registrarMovimiento()">✚ Registrar movimiento</button>
+        <button class="btn btn-secondary" onclick="limpiarFormMovimiento()">Limpiar</button>
+      </div>
+    </div>
+
+    <!-- GRÁFICOS -->
+    <div class="section" style="padding:28px 32px;">
+      <div class="section-label">Visualización financiera</div>
+      <h2 style="margin-bottom:16px;">Análisis gráfico de flujo de caja</h2>
+
+      <div class="period-row">
+        <span class="period-label">Período:</span>
+        <button class="period-btn active" onclick="setPeriod('mensual')" id="periodMensual">Mensual</button>
+        <button class="period-btn" onclick="setPeriod('trimestral')" id="periodTrimestral">Trimestral</button>
+        <button class="period-btn" onclick="setPeriod('semestral')" id="periodSemestral">Semestral</button>
+        <button class="period-btn" onclick="setPeriod('anual')" id="periodAnual">Anual</button>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-box">
+          <h4>Gastos por categoría</h4>
+          <div class="chart-subtitle">Distribución de egresos en el período</div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chartGastos"></canvas>
+            <div class="chart-empty hidden" id="emptyGastos">
+              <span>🥧</span>
+              Sin gastos en el período seleccionado
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-box">
+          <h4>Fuentes de ingreso</h4>
+          <div class="chart-subtitle">Ingresos agrupados por categoría</div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chartIngresos"></canvas>
+            <div class="chart-empty hidden" id="emptyIngresos">
+              <span>📊</span>
+              Sin ingresos en el período seleccionado
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-box full-width">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+            <div>
+              <h4>Evolución patrimonial</h4>
+              <div class="chart-subtitle">Saldo CC y Patrimonio Total en el tiempo</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span style="font-size:11px;color:var(--text-light);">Mostrar:</span>
+              <button class="periodo-btn period-btn active" id="toggleCC" onclick="toggleLineChart('cc')" style="padding:5px 12px;font-size:11px;">Solo CC</button>
+              <button class="period-btn" id="togglePatrimonio" onclick="toggleLineChart('patrimonio')" style="padding:5px 12px;font-size:11px;">+ Inversiones</button>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap tall" style="margin-top:12px;">
+            <canvas id="chartEvolucion"></canvas>
+            <div class="chart-empty hidden" id="emptyEvolucion">
+              <span>📈</span>
+              Registra movimientos para ver la evolución
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORIAL DE MOVIMIENTOS -->
+    <div class="section" style="padding:28px 32px;">
+      <div class="section-label">Historial</div>
+      <h2 style="margin-bottom:16px;">Registro de movimientos</h2>
+
+      <div class="filter-row">
+        <select id="filterCuenta" onchange="renderMovimientos()">
+          <option value="">Todas las cuentas</option>
+          <option value="bice">Bice</option>
+          <option value="match">Match</option>
+          <option value="prex">Prex</option>
         </select>
+        <select id="filterTipo" onchange="renderMovimientos()">
+          <option value="">Todos los tipos</option>
+          <option value="ingreso">Ingresos</option>
+          <option value="gasto">Gastos</option>
+          <option value="transferencia">Transferencias</option>
+        </select>
+        <select id="filterCategoria" onchange="renderMovimientos()">
+          <option value="">Todas las categorías</option>
+        </select>
+        <span id="movSummaryLabel" style="margin-left:auto;font-size:12px;color:var(--text-light);"></span>
       </div>
-      <div class="form-group hidden" id="aporteParcialGroup" style="max-width:300px;margin-top:12px;">
-        <label>Monto aportado (CLP)</label>
-        <input type="number" id="aporteParcial" placeholder="Ej: 100000">
-      </div>
-      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn" onclick="guardarReporte()">💾 Guardar reporte mensual</button>
-        <button class="btn btn-secondary" onclick="calcularAnalisis()">📊 Ver análisis inteligente</button>
-        <button class="btn btn-danger btn-small hidden" id="btnEliminar" onclick="eliminarReporte()">🗑️ Eliminar este reporte</button>
-      </div>
-    </div>
 
-    <!-- ANÁLISIS INTELIGENTE -->
-    <div id="analysisSection" class="analysis-box hidden">
-      <h3>📊 Análisis Inteligente del Mes</h3>
-      <div id="analysisContent"></div>
-    </div>
-
-    <!-- HISTORIAL -->
-    <div style="margin-top:32px;">
-      <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:16px;">Historial de reportes</h3>
       <div style="overflow-x:auto;">
-        <table class="history-table" id="historyTable">
+        <table class="movements-table">
           <thead>
             <tr>
-              <th>Mes</th>
-              <th>Total reportado</th>
-              <th>Esperado</th>
-              <th>Diferencia</th>
-              <th>Tasa real mensual</th>
-              <th>Tasa esperada</th>
-              <th>Estado</th>
-              <th>Aporte</th>
-              <th>Acciones</th>
+              <th>Fecha</th>
+              <th>Descripción</th>
+              <th>Tipo</th>
+              <th>Categoría</th>
+              <th>Cuenta</th>
+              <th style="text-align:right;">Monto</th>
+              <th style="text-align:center;">Acción</th>
             </tr>
           </thead>
-          <tbody id="historyBody">
-            <tr><td colspan="9" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>
-          </tbody>
+          <tbody id="movimientosBody"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- GRÁFICO SIMPLE -->
-    <div style="margin-top:32px;">
-      <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--navy);margin-bottom:16px;">Evolución del patrimonio</h3>
-      <div class="chart-container">
-        <div class="mini-chart" id="evolutionChart"></div>
-      </div>
-    </div>
-  </div>
+  </div><!-- /tabCaja -->
 
-</div>
+</div><!-- /mainContent -->
 
 <script>
-// CREDENCIALES
+/* ══════════════════════════════════════════════
+   CONFIGURACIÓN GLOBAL
+══════════════════════════════════════════════ */
 const USUARIO_VALIDO = 'Juanech';
 const PASSWORD_VALIDO = 'Juanech';
 
-// CONFIGURACIÓN INICIAL — Mayo 2026
 const fondos = [
-  { id: 'bice_vista', nombre: 'Cuenta vista BICE', institucion: 'BICE', riesgo: 'nulo', tasaAnual: 0, monto: 50000, tipo: 'fijo' },
-  { id: 'match', nombre: 'Ahorro 24/7 Match', institucion: 'Match', riesgo: 'bajo', tasaAnual: 4.6, monto: 550000, tipo: 'fijo' },
-  { id: 'bice_emergentes', nombre: 'Acciones Mercados Emergentes', institucion: 'BICE', riesgo: 'alto', tasaAnual: 20, monto: 1144872, tipo: 'variable' },
-  { id: 'bice_digital', nombre: 'Digital Balanceado', institucion: 'BICE', riesgo: 'medio', tasaAnual: 14, monto: 754582, tipo: 'variable' },
-  { id: 'lv_lider', nombre: 'LV Portfolio Líder A', institucion: 'LarrainVial', riesgo: 'alto', tasaAnual: 15, monto: 1094628, tipo: 'variable' },
-  { id: 'lv_estrategico', nombre: 'LV Ahorro Estratégico D', institucion: 'LarrainVial', riesgo: 'medio', tasaAnual: 10, monto: 401846, tipo: 'variable' },
-  { id: 'lv_plazo', nombre: 'LV Ahorro a Plazo D', institucion: 'LarrainVial', riesgo: 'medio', tasaAnual: 10, monto: 374301, tipo: 'variable' },
-  { id: 'lv_corporativo', nombre: 'LV Ahorro Corporativo A', institucion: 'LarrainVial', riesgo: 'bajo', tasaAnual: 7, monto: 1473385, tipo: 'fijo' },
-  { id: 'lv_capital', nombre: 'LV Ahorro Capital A', institucion: 'LarrainVial', riesgo: 'bajo', tasaAnual: 7, monto: 1681204, tipo: 'fijo' }
+  { id: 'bice_vista',       nombre: 'Cuenta vista BICE',               institucion: 'BICE',       riesgo: 'nulo', tasaAnual: 0,  monto: 50000,    tipo: 'fijo' },
+  { id: 'match',            nombre: 'Ahorro 24/7 Match',               institucion: 'Match',      riesgo: 'bajo', tasaAnual: 4.6,monto: 550000,   tipo: 'fijo' },
+  { id: 'bice_emergentes',  nombre: 'Acciones Mercados Emergentes',    institucion: 'BICE',       riesgo: 'alto', tasaAnual: 20, monto: 1144872,  tipo: 'variable' },
+  { id: 'bice_digital',     nombre: 'Digital Balanceado',              institucion: 'BICE',       riesgo: 'medio',tasaAnual: 14, monto: 754582,   tipo: 'variable' },
+  { id: 'lv_lider',         nombre: 'LV Portfolio Líder A',            institucion: 'LarrainVial',riesgo: 'alto', tasaAnual: 15, monto: 1094628,  tipo: 'variable' },
+  { id: 'lv_estrategico',   nombre: 'LV Ahorro Estratégico D',         institucion: 'LarrainVial',riesgo: 'medio',tasaAnual: 10, monto: 401846,   tipo: 'variable' },
+  { id: 'lv_plazo',         nombre: 'LV Ahorro a Plazo D',             institucion: 'LarrainVial',riesgo: 'medio',tasaAnual: 10, monto: 374301,   tipo: 'variable' },
+  { id: 'lv_corporativo',   nombre: 'LV Ahorro Corporativo A',         institucion: 'LarrainVial',riesgo: 'bajo', tasaAnual: 7,  monto: 1473385,  tipo: 'fijo' },
+  { id: 'lv_capital',       nombre: 'LV Ahorro Capital A',             institucion: 'LarrainVial',riesgo: 'bajo', tasaAnual: 7,  monto: 1681204,  tipo: 'fijo' }
 ];
 
-const meses = ['Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre','Enero','Febrero','Marzo','Abril'];
-const anno = ['2026','2026','2026','2026','2026','2026','2026','2026','2027','2027','2027','2027'];
+const FONDOS_BASE_TOTAL = fondos.reduce((s, f) => s + f.monto, 0);
 
-let currentMonth = 0;
-let reportes = [];
+const meses = ['Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre','Enero','Febrero','Marzo','Abril'];
+const anno  = ['2026','2026','2026','2026','2026','2026','2026','2026','2027','2027','2027','2027'];
+
+let currentMonth  = 0;
+let reportes      = [];
 let modalCallback = null;
 let editingReport = null;
+let activeTab     = 'inversiones';
 
-// LOGIN / LOGOUT
+/* ──────────────────────────────────────────
+   CAJA DIARIA — Estado
+────────────────────────────────────────── */
+let ccData = {
+  saldoBase: { bice: 0, match: 0, prex: 0 },
+  movimientos: [] // { id, fecha, desc, monto, tipo, categoria, cuenta, cuentaDest? }
+};
+
+let currentPeriod    = 'mensual';
+let lineChartMode    = 'cc';          // 'cc' | 'patrimonio'
+let chartGastos      = null;
+let chartIngresos    = null;
+let chartEvolucion   = null;
+let currentTipo      = 'ingreso';
+
+const CATEGORIAS = {
+  ingreso:        ['Sueldo CVD', 'Mesada', 'Otros Sueldos', 'Otros'],
+  gasto:          ['Comida', 'Transporte', 'Tecnología', 'Carrete'],
+  transferencia:  []
+};
+
+const CATEGORY_COLORS = {
+  // Gastos
+  'Comida':        '#c9a84c',
+  'Transporte':    '#4a90d9',
+  'Tecnología':    '#0f1e35',
+  'Carrete':       '#2ecc8a',
+  // Ingresos
+  'Sueldo CVD':    '#0f1e35',
+  'Mesada':        '#c9a84c',
+  'Otros Sueldos': '#2ecc8a',
+  'Otros':         '#4a90d9',
+};
+
+/* ══════════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════════ */
 function doLogin() {
   const user = document.getElementById('loginUser').value.trim();
   const pass = document.getElementById('loginPass').value.trim();
-
   if (user === USUARIO_VALIDO && pass === PASSWORD_VALIDO) {
     localStorage.setItem('patrimonioSession', 'active');
     showDashboard();
@@ -794,24 +1064,19 @@ function doLogout() {
 function showDashboard() {
   document.getElementById('loginOverlay').classList.add('hidden');
   document.getElementById('mainHeader').style.display = 'block';
+  document.getElementById('tabNavWrapper').style.display = 'block';
   document.getElementById('mainContent').style.display = 'block';
   init();
 }
 
-// Verificar sesión al cargar
-if (localStorage.getItem('patrimonioSession') === 'active') {
-  showDashboard();
-}
+if (localStorage.getItem('patrimonioSession') === 'active') showDashboard();
 
-// Enter en login
-document.getElementById('loginPass').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') doLogin();
-});
-document.getElementById('loginUser').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') document.getElementById('loginPass').focus();
-});
+document.getElementById('loginPass').addEventListener('keypress', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('loginUser').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('loginPass').focus(); });
 
-// MODAL
+/* ══════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════ */
 function showModal(title, text, confirmText, callback) {
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalText').textContent = text;
@@ -819,19 +1084,36 @@ function showModal(title, text, confirmText, callback) {
   modalCallback = callback;
   document.getElementById('modalOverlay').classList.add('show');
 }
-
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('show');
   modalCallback = null;
 }
-
 function confirmModalAction() {
   if (modalCallback) modalCallback();
   closeModal();
 }
 
-// INICIALIZAR
+/* ══════════════════════════════════════════════
+   TABS
+══════════════════════════════════════════════ */
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tabInversiones').classList.toggle('active', tab === 'inversiones');
+  document.getElementById('tabCaja').classList.toggle('active', tab === 'caja');
+  document.getElementById('tabBtnInversiones').classList.toggle('active', tab === 'inversiones');
+  document.getElementById('tabBtnCaja').classList.toggle('active', tab === 'caja');
+  if (tab === 'caja') {
+    setTimeout(() => {
+      renderChartsCaja();
+    }, 50);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
 function init() {
+  // Inversiones
   reportes = JSON.parse(localStorage.getItem('reportesPatrimonio') || '[]');
   renderMonthSelector();
   renderFundsTable();
@@ -840,24 +1122,34 @@ function init() {
   renderHistory();
   renderChart();
 
-  document.getElementById('aporteMensual').addEventListener('change', (e) => {
+  document.getElementById('aporteMensual').addEventListener('change', e => {
     document.getElementById('aporteParcialGroup').classList.toggle('hidden', e.target.value !== 'parcial');
   });
+
+  // Caja Diaria
+  loadCCData();
+  setTodayDate();
+  setTipo('ingreso');
+  renderKPIs();
+  renderSaldos();
+  renderMovimientos();
+  populateCategoryFilter();
 }
 
+/* ══════════════════════════════════════════════
+   INVERSIONES — Render functions (original)
+══════════════════════════════════════════════ */
 function renderMonthSelector() {
   const container = document.getElementById('monthSelector');
-  container.innerHTML = meses.map((m, i) => 
-    `<button class="month-btn ${i === currentMonth ? 'active' : ''}" data-month="${i}" onclick="selectMonth(${i})">${m} ${anno[i]}</button>`
+  container.innerHTML = meses.map((m, i) =>
+    `<button class="month-btn ${i === currentMonth ? 'active' : ''}" onclick="selectMonth(${i})">${m} ${anno[i]}</button>`
   ).join('');
 }
 
 function selectMonth(m) {
   currentMonth = m;
-  document.querySelectorAll('.month-btn').forEach((b, i) => {
-    b.classList.toggle('active', i === m);
-  });
-  document.getElementById('formTitle').textContent = `Reporte ${meses[currentMonth]} ${anno[currentMonth]}`;
+  document.querySelectorAll('.month-btn').forEach((b, i) => b.classList.toggle('active', i === m));
+  document.getElementById('formTitle').textContent = `Reporte ${meses[m]} ${anno[m]}`;
   document.getElementById('analysisSection').classList.add('hidden');
   loadExistingReport();
 }
@@ -867,61 +1159,44 @@ function renderFundsTable() {
   let total = 0;
   tbody.innerHTML = fondos.map(f => {
     total += f.monto;
-    const tagClass = f.riesgo === 'nulo' ? 'tag-nulo' : f.riesgo === 'bajo' ? 'tag-bajo' : f.riesgo === 'medio' ? 'tag-medio' : 'tag-alto';
-    const tagText = f.riesgo === 'nulo' ? '0%' : f.riesgo === 'bajo' ? 'Bajo' : f.riesgo === 'medio' ? 'Medio' : 'Alto';
-    const tasaText = f.tasaAnual === 0 ? '0,00%' : f.tasaAnual + '%';
-    return `
-      <tr>
-        <td>
-          <span class="fund-name">${f.nombre}</span>
-          <span class="fund-desc">${f.institucion}</span>
-        </td>
-        <td>${f.institucion}</td>
-        <td><span class="tag ${tagClass}">${tagText}</span></td>
-        <td class="num ${f.tasaAnual > 0 ? 'num-pos' : ''}">${tasaText}</td>
-        <td class="num">$${f.monto.toLocaleString('es-CL')}</td>
-      </tr>
-    `;
-  }).join('') + `
-    <tr class="total-row">
-      <td colspan="4"><strong>Total patrimonio base</strong></td>
-      <td><strong>$${total.toLocaleString('es-CL')}</strong></td>
-    </tr>
-  `;
+    const tagClass = { nulo: 'tag-nulo', bajo: 'tag-bajo', medio: 'tag-medio', alto: 'tag-alto' }[f.riesgo];
+    const tagText  = { nulo: '0%', bajo: 'Bajo', medio: 'Medio', alto: 'Alto' }[f.riesgo];
+    return `<tr>
+      <td><span class="fund-name">${f.nombre}</span><span class="fund-desc">${f.institucion}</span></td>
+      <td>${f.institucion}</td>
+      <td><span class="tag ${tagClass}">${tagText}</span></td>
+      <td class="num ${f.tasaAnual > 0 ? 'num-pos' : ''}">${f.tasaAnual === 0 ? '0,00%' : f.tasaAnual + '%'}</td>
+      <td class="num" style="text-align:right;">$${f.monto.toLocaleString('es-CL')}</td>
+    </tr>`;
+  }).join('') + `<tr class="total-row"><td colspan="4"><strong>Total patrimonio base inversiones</strong></td><td style="text-align:right;"><strong>$${total.toLocaleString('es-CL')}</strong></td></tr>`;
 }
 
 function renderProjections() {
-  const grid = document.getElementById('projectionGrid');
-  grid.innerHTML = fondos.map(f => {
+  document.getElementById('projectionGrid').innerHTML = fondos.map(f => {
     if (f.tasaAnual === 0) return '';
-    const proj365 = Math.round(f.monto * (1 + f.tasaAnual / 100));
+    const proj365  = Math.round(f.monto * (1 + f.tasaAnual / 100));
     const ganancia = proj365 - f.monto;
     const borderClass = f.tasaAnual >= 15 ? 'green-border' : f.tasaAnual >= 10 ? '' : 'red-border';
-    return `
-      <div class="proj-card ${borderClass}">
-        <div class="proj-card-title">${f.nombre}</div>
-        <div class="proj-card-val">$${proj365.toLocaleString('es-CL')}</div>
-        <div class="proj-card-sub">Base: $${f.monto.toLocaleString('es-CL')}</div>
-        <div class="proj-card-gain">+ $${ganancia.toLocaleString('es-CL')} / año</div>
-      </div>
-    `;
+    return `<div class="proj-card ${borderClass}">
+      <div class="proj-card-title">${f.nombre}</div>
+      <div class="proj-card-val">$${proj365.toLocaleString('es-CL')}</div>
+      <div class="proj-card-sub">Base: $${f.monto.toLocaleString('es-CL')}</div>
+      <div class="proj-card-gain">+ $${ganancia.toLocaleString('es-CL')} / año</div>
+    </div>`;
   }).join('');
 }
 
 function renderForm() {
-  const grid = document.getElementById('formGrid');
-  grid.innerHTML = fondos.map(f => `
+  document.getElementById('formGrid').innerHTML = fondos.map(f => `
     <div class="form-group">
       <label>${f.nombre} (${f.institucion})</label>
       <input type="number" id="val_${f.id}" placeholder="$${f.monto.toLocaleString('es-CL')}" step="1000">
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function loadExistingReport() {
   const reporte = reportes.find(r => r.mes === currentMonth);
   const btnEliminar = document.getElementById('btnEliminar');
-
   if (!reporte) {
     fondos.forEach(f => document.getElementById(`val_${f.id}`).value = '');
     document.getElementById('aporteMensual').value = 'si';
@@ -931,13 +1206,11 @@ function loadExistingReport() {
     editingReport = null;
     return;
   }
-
   editingReport = reporte;
   fondos.forEach(f => {
     const val = reporte.valores[f.id];
     document.getElementById(`val_${f.id}`).value = val || '';
   });
-
   document.getElementById('aporteMensual').value = reporte.aporteTipo || 'si';
   if (reporte.aporteTipo === 'parcial') {
     document.getElementById('aporteParcial').value = reporte.aporteMonto || '';
@@ -945,7 +1218,6 @@ function loadExistingReport() {
   } else {
     document.getElementById('aporteParcialGroup').classList.add('hidden');
   }
-
   btnEliminar.classList.remove('hidden');
 }
 
@@ -961,59 +1233,37 @@ function guardarReporte() {
     totalReportado += val;
   });
 
-  if (!hasData) {
-    showAlert('Debes ingresar al menos un valor para guardar el reporte.', 'warning');
-    return;
-  }
+  if (!hasData) { showAlert('Debes ingresar al menos un valor para guardar el reporte.', 'warning'); return; }
 
-  const aporteTipo = document.getElementById('aporteMensual').value;
+  const aporteTipo  = document.getElementById('aporteMensual').value;
   const aporteMonto = aporteTipo === 'si' ? 150000 : aporteTipo === 'parcial' ? (parseFloat(document.getElementById('aporteParcial').value) || 0) : 0;
-
   const mesesTranscurridos = currentMonth + 1;
   const totalEsperado = calcularEsperadoAcumulado(mesesTranscurridos, aporteMonto);
 
-  const reporte = {
-    mes: currentMonth,
-    mesNombre: meses[currentMonth] + ' ' + anno[currentMonth],
-    valores,
-    totalReportado,
-    totalEsperado,
-    aporteTipo,
-    aporteMonto,
-    fechaGuardado: new Date().toISOString()
-  };
-
+  const reporte = { mes: currentMonth, mesNombre: meses[currentMonth] + ' ' + anno[currentMonth], valores, totalReportado, totalEsperado, aporteTipo, aporteMonto, fechaGuardado: new Date().toISOString() };
   const idx = reportes.findIndex(r => r.mes === currentMonth);
-  if (idx >= 0) reportes[idx] = reporte;
-  else reportes.push(reporte);
-
-  reportes.sort((a,b) => a.mes - b.mes);
+  if (idx >= 0) reportes[idx] = reporte; else reportes.push(reporte);
+  reportes.sort((a, b) => a.mes - b.mes);
   localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
-
-  const action = idx >= 0 ? 'actualizado' : 'guardado';
-  showAlert(`✅ Reporte de ${meses[currentMonth]} ${action}. Total: $${totalReportado.toLocaleString('es-CL')}`, 'success');
-
+  showAlert(`✅ Reporte de ${meses[currentMonth]} guardado. Total: $${totalReportado.toLocaleString('es-CL')}`, 'success');
   editingReport = reporte;
   document.getElementById('btnEliminar').classList.remove('hidden');
   renderHistory();
   renderChart();
+  renderKPIs(); // update patrimonio KPI
 }
 
 function eliminarReporte() {
-  showModal(
-    '¿Eliminar reporte?',
-    `Estás a punto de eliminar el reporte de ${meses[currentMonth]} ${anno[currentMonth]}. Esta acción no se puede deshacer.`,
-    'Eliminar',
-    () => {
-      reportes = reportes.filter(r => r.mes !== currentMonth);
-      localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
-      loadExistingReport();
-      renderHistory();
-      renderChart();
-      document.getElementById('analysisSection').classList.add('hidden');
-      showAlert(`Reporte de ${meses[currentMonth]} eliminado.`, 'info');
-    }
-  );
+  showModal('¿Eliminar reporte?', `Eliminar reporte de ${meses[currentMonth]} ${anno[currentMonth]}. Esta acción no se puede deshacer.`, 'Eliminar', () => {
+    reportes = reportes.filter(r => r.mes !== currentMonth);
+    localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
+    loadExistingReport();
+    renderHistory();
+    renderChart();
+    document.getElementById('analysisSection').classList.add('hidden');
+    showAlert(`Reporte de ${meses[currentMonth]} eliminado.`, 'info');
+    renderKPIs();
+  });
 }
 
 function editarReporte(mesIndex) {
@@ -1026,33 +1276,24 @@ function calcularEsperadoAcumulado(mesesTranscurridos, aporteMensual) {
   let total = 0;
   fondos.forEach(f => {
     const tasaMensual = f.tasaAnual / 100 / 12;
-    const valorEsperado = f.monto * Math.pow(1 + tasaMensual, mesesTranscurridos);
-    total += valorEsperado;
+    total += f.monto * Math.pow(1 + tasaMensual, mesesTranscurridos);
   });
-
   if (aporteMensual > 0) {
     const tasaAporte = 0.14 / 12;
-    for (let i = 0; i < mesesTranscurridos; i++) {
-      total += aporteMensual * Math.pow(1 + tasaAporte, mesesTranscurridos - i);
-    }
+    for (let i = 0; i < mesesTranscurridos; i++) total += aporteMensual * Math.pow(1 + tasaAporte, mesesTranscurridos - i);
   }
-
   return Math.round(total);
 }
 
 function calcularAnalisis() {
   const reporte = reportes.find(r => r.mes === currentMonth);
-  if (!reporte) {
-    showAlert('Primero guarda un reporte para este mes para ver el análisis.', 'warning');
-    return;
-  }
+  if (!reporte) { showAlert('Primero guarda un reporte para este mes.', 'warning'); return; }
 
   const section = document.getElementById('analysisSection');
   const content = document.getElementById('analysisContent');
   section.classList.remove('hidden');
 
   let html = '<div class="analysis-grid">';
-
   fondos.forEach(f => {
     if (f.tasaAnual === 0) return;
     const real = reporte.valores[f.id] || 0;
@@ -1061,57 +1302,23 @@ function calcularAnalisis() {
     const esperado = f.monto * Math.pow(1 + tasaMensualEsperada, mesesTranscurridos);
     const diferencia = real - esperado;
     const tasaRealAnualizada = real > 0 ? ((real / f.monto) - 1) * (12 / mesesTranscurridos) * 100 : 0;
-
-    let estado = 'ok';
-    let color = 'var(--gold-light)';
-    let mensaje = 'Dentro de lo esperado';
-
-    if (diferencia > esperado * 0.05) {
-      estado = 'excelente';
-      color = 'var(--green)';
-      mensaje = '🚀 Muy por encima de lo esperado';
-    } else if (diferencia < -esperado * 0.05) {
-      estado = 'bajo';
-      color = 'var(--red)';
-      mensaje = '⚠️ Por debajo de lo esperado';
-    }
-
-    html += `
-      <div class="analysis-item">
-        <div class="label">${f.nombre}</div>
-        <div class="value" style="color:${color}">$${real.toLocaleString('es-CL')}</div>
-        <div class="sub">
-          Esperado: $${Math.round(esperado).toLocaleString('es-CL')}<br>
-          Diferencia: ${diferencia >= 0 ? '+' : ''}$${Math.round(diferencia).toLocaleString('es-CL')}<br>
-          Tasa real anualizada: ${tasaRealAnualizada.toFixed(1)}% (esperada: ${f.tasaAnual}%)<br>
-          <strong>${mensaje}</strong>
-        </div>
-      </div>
-    `;
+    let color = 'var(--gold-light)', mensaje = 'Dentro de lo esperado';
+    if (diferencia > esperado * 0.05) { color = 'var(--green)'; mensaje = '🚀 Muy por encima de lo esperado'; }
+    else if (diferencia < -esperado * 0.05) { color = 'var(--red)'; mensaje = '⚠️ Por debajo de lo esperado'; }
+    html += `<div class="analysis-item">
+      <div class="label">${f.nombre}</div>
+      <div class="value" style="color:${color}">$${real.toLocaleString('es-CL')}</div>
+      <div class="sub">Esperado: $${Math.round(esperado).toLocaleString('es-CL')}<br>Diferencia: ${diferencia >= 0 ? '+' : ''}$${Math.round(diferencia).toLocaleString('es-CL')}<br>Tasa real anualizada: ${tasaRealAnualizada.toFixed(1)}% (esperada: ${f.tasaAnual}%)<br><strong>${mensaje}</strong></div>
+    </div>`;
   });
-
-  const totalReal = reporte.totalReportado;
-  const totalEsperado = reporte.totalEsperado;
+  const totalReal = reporte.totalReportado, totalEsperado = reporte.totalEsperado;
   const difGlobal = totalReal - totalEsperado;
   const tasaGlobalReal = ((totalReal / 7524819) - 1) * (12 / (currentMonth + 1)) * 100;
-  const tasaGlobalEsperada = 10.9;
-
-  html += `
-    <div class="analysis-item" style="border:2px solid var(--gold);">
-      <div class="label">📈 RESUMEN GLOBAL</div>
-      <div class="value">$${totalReal.toLocaleString('es-CL')}</div>
-      <div class="sub">
-        Esperado: $${totalEsperado.toLocaleString('es-CL')}<br>
-        Diferencia: ${difGlobal >= 0 ? '+' : ''}$${difGlobal.toLocaleString('es-CL')}<br>
-        Tu tasa real: ${tasaGlobalReal.toFixed(1)}% anual<br>
-        Tasa esperada portfolio: ~${tasaGlobalEsperada}%<br>
-        <strong style="color:${difGlobal >= 0 ? 'var(--green)' : 'var(--red)'}">
-          ${difGlobal >= 0 ? '✅ Vas bien encaminado' : '⚠️ Revisa las posiciones en rojo'}
-        </strong>
-      </div>
-    </div>
-  `;
-
+  html += `<div class="analysis-item" style="border:2px solid var(--gold);">
+    <div class="label">📈 RESUMEN GLOBAL</div>
+    <div class="value">$${totalReal.toLocaleString('es-CL')}</div>
+    <div class="sub">Esperado: $${totalEsperado.toLocaleString('es-CL')}<br>Diferencia: ${difGlobal >= 0 ? '+' : ''}$${difGlobal.toLocaleString('es-CL')}<br>Tu tasa real: ${tasaGlobalReal.toFixed(1)}% anual<br>Tasa esperada portfolio: ~10.9%<br><strong style="color:${difGlobal >= 0 ? 'var(--green)' : 'var(--red)'}">${difGlobal >= 0 ? '✅ Vas bien encaminado' : '⚠️ Revisa las posiciones en rojo'}</strong></div>
+  </div>`;
   html += '</div>';
   content.innerHTML = html;
   section.scrollIntoView({ behavior: 'smooth' });
@@ -1123,53 +1330,41 @@ function renderHistory() {
     tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-light);padding:20px;">Sin reportes guardados aún</td></tr>';
     return;
   }
-
   tbody.innerHTML = reportes.map(r => {
     const dif = r.totalReportado - r.totalEsperado;
     const difPct = r.totalEsperado > 0 ? (dif / r.totalEsperado * 100).toFixed(1) : 0;
     const tasaReal = ((r.totalReportado / 7524819) - 1) * (12 / (r.mes + 1)) * 100;
-
-    let statusClass = 'status-ok';
-    let statusText = 'Normal';
-
+    let statusClass = 'status-ok', statusText = 'Normal';
     if (difPct > 5) { statusClass = 'status-excelente'; statusText = 'Excelente 🚀'; }
     else if (difPct > 2) { statusClass = 'status-bien'; statusText = 'Bien 👍'; }
     else if (difPct < -5) { statusClass = 'status-muy-bajo'; statusText = 'Muy bajo ⚠️'; }
     else if (difPct < -2) { statusClass = 'status-bajo'; statusText = 'Bajo 📉'; }
-
-    return `
-      <tr>
-        <td><strong>${r.mesNombre}</strong></td>
-        <td class="num">$${r.totalReportado.toLocaleString('es-CL')}</td>
-        <td class="num">$${r.totalEsperado.toLocaleString('es-CL')}</td>
-        <td class="num ${dif >= 0 ? 'num-pos' : 'num-neg'}">${dif >= 0 ? '+' : ''}$${dif.toLocaleString('es-CL')}</td>
-        <td class="num">${tasaReal.toFixed(1)}%</td>
-        <td class="num">~10.9%</td>
-        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-        <td>${r.aporteMonto > 0 ? '$' + r.aporteMonto.toLocaleString('es-CL') : '—'}</td>
-        <td>
-          <button class="btn btn-small btn-secondary" onclick="editarReporte(${r.mes})" title="Editar">✏️</button>
-          <button class="btn btn-small btn-danger" onclick="eliminarDesdeHistorial(${r.mes})" title="Eliminar">🗑️</button>
-        </td>
-      </tr>
-    `;
+    return `<tr>
+      <td><strong>${r.mesNombre}</strong></td>
+      <td class="num">$${r.totalReportado.toLocaleString('es-CL')}</td>
+      <td class="num">$${r.totalEsperado.toLocaleString('es-CL')}</td>
+      <td class="num ${dif >= 0 ? 'num-pos' : 'num-neg'}">${dif >= 0 ? '+' : ''}$${dif.toLocaleString('es-CL')}</td>
+      <td class="num">${tasaReal.toFixed(1)}%</td>
+      <td class="num">~10.9%</td>
+      <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+      <td>${r.aporteMonto > 0 ? '$' + r.aporteMonto.toLocaleString('es-CL') : '—'}</td>
+      <td>
+        <button class="btn btn-small btn-secondary" onclick="editarReporte(${r.mes})">✏️</button>
+        <button class="btn btn-small btn-danger" onclick="eliminarDesdeHistorial(${r.mes})">🗑️</button>
+      </td>
+    </tr>`;
   }).join('');
 }
 
 function eliminarDesdeHistorial(mes) {
-  showModal(
-    '¿Eliminar reporte?',
-    `¿Eliminar el reporte de ${meses[mes]} ${anno[mes]}? Esta acción no se puede deshacer.`,
-    'Eliminar',
-    () => {
-      reportes = reportes.filter(r => r.mes !== mes);
-      localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
-      if (currentMonth === mes) loadExistingReport();
-      renderHistory();
-      renderChart();
-      showAlert(`Reporte de ${meses[mes]} eliminado.`, 'info');
-    }
-  );
+  showModal('¿Eliminar reporte?', `¿Eliminar reporte de ${meses[mes]} ${anno[mes]}?`, 'Eliminar', () => {
+    reportes = reportes.filter(r => r.mes !== mes);
+    localStorage.setItem('reportesPatrimonio', JSON.stringify(reportes));
+    if (currentMonth === mes) loadExistingReport();
+    renderHistory();
+    renderChart();
+    showAlert(`Reporte de ${meses[mes]} eliminado.`, 'info');
+  });
 }
 
 function renderChart() {
@@ -1178,21 +1373,15 @@ function renderChart() {
     chart.innerHTML = '<div style="text-align:center;color:var(--text-light);padding:40px;">Ingresa tu primer reporte para ver la evolución</div>';
     return;
   }
-
   const maxVal = Math.max(...reportes.map(r => r.totalReportado), 9000000);
   const minVal = 7000000;
-
-  chart.innerHTML = reportes.map((r, i) => {
-    const height = ((r.totalReportado - minVal) / (maxVal - minVal)) * 100;
-    const barHeight = Math.max(height, 5);
+  chart.innerHTML = reportes.map(r => {
+    const barHeight = Math.max(((r.totalReportado - minVal) / (maxVal - minVal)) * 100, 5);
     const dif = r.totalReportado - r.totalEsperado;
-    const color = dif >= 0 ? 'var(--green)' : dif < -r.totalEsperado*0.03 ? 'var(--red)' : 'var(--gold)';
-
-    return `
-      <div class="bar" style="height:${barHeight}%;background:${color};" title="${r.mesNombre}: $${r.totalReportado.toLocaleString('es-CL')}">
-        <div class="bar-label">${meses[r.mes].substring(0,3)}</div>
-      </div>
-    `;
+    const color = dif >= 0 ? 'var(--green)' : dif < -r.totalEsperado * 0.03 ? 'var(--red)' : 'var(--gold)';
+    return `<div class="bar" style="height:${barHeight}%;background:${color};" title="${r.mesNombre}: $${r.totalReportado.toLocaleString('es-CL')}">
+      <div class="bar-label">${meses[r.mes].substring(0,3)}</div>
+    </div>`;
   }).join('');
 }
 
@@ -1200,9 +1389,559 @@ function showAlert(msg, type) {
   const alert = document.getElementById('alertBox');
   alert.className = `alert alert-${type}`;
   alert.textContent = msg;
-  setTimeout(() => alert.classList.add('hidden'), 5000);
+  setTimeout(() => { alert.className = 'alert hidden'; }, 5000);
+}
+
+/* ══════════════════════════════════════════════
+   CAJA DIARIA — Data layer
+══════════════════════════════════════════════ */
+function loadCCData() {
+  const saved = localStorage.getItem('cajaData');
+  if (saved) {
+    try { ccData = JSON.parse(saved); } catch(e) {}
+  }
+  if (!ccData.saldoBase) ccData.saldoBase = { bice: 0, match: 0, prex: 0 };
+  if (!ccData.movimientos) ccData.movimientos = [];
+}
+
+function saveCCData() {
+  localStorage.setItem('cajaData', JSON.stringify(ccData));
+}
+
+function getSaldo(cuenta) {
+  let s = ccData.saldoBase[cuenta] || 0;
+  ccData.movimientos.forEach(m => {
+    if (m.tipo === 'ingreso' && m.cuenta === cuenta) s += m.monto;
+    else if (m.tipo === 'gasto' && m.cuenta === cuenta) s -= m.monto;
+    else if (m.tipo === 'transferencia') {
+      if (m.cuenta === cuenta) s -= m.monto;
+      if (m.cuentaDest === cuenta) s += m.monto;
+    }
+  });
+  return s;
+}
+
+function getTotalCC() {
+  return getSaldo('bice') + getSaldo('match') + getSaldo('prex');
+}
+
+function getInvestmentValue() {
+  if (reportes.length > 0) {
+    return reportes[reportes.length - 1].totalReportado;
+  }
+  return FONDOS_BASE_TOTAL;
+}
+
+function getPatrimonioTotal() {
+  return getTotalCC() + getInvestmentValue();
+}
+
+/* ══════════════════════════════════════════════
+   CAJA DIARIA — Período
+══════════════════════════════════════════════ */
+function getPeriodDays() {
+  return { mensual: 30, trimestral: 90, semestral: 180, anual: 365 }[currentPeriod];
+}
+
+function getCutoffDate() {
+  const d = new Date();
+  d.setDate(d.getDate() - getPeriodDays());
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function getFilteredMovimientos() {
+  const cutoff = getCutoffDate();
+  return ccData.movimientos.filter(m => new Date(m.fecha) >= cutoff);
+}
+
+function setPeriod(p) {
+  currentPeriod = p;
+  ['mensual', 'trimestral', 'semestral', 'anual'].forEach(id => {
+    document.getElementById('period' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', id === p);
+  });
+  renderChartsCaja();
+}
+
+/* ══════════════════════════════════════════════
+   CAJA DIARIA — KPIs y Saldos
+══════════════════════════════════════════════ */
+function renderKPIs() {
+  const totalCC = getTotalCC();
+  const patrimonioTotal = getPatrimonioTotal();
+  document.getElementById('kpiTotalCC').textContent = '$' + totalCC.toLocaleString('es-CL');
+  document.getElementById('kpiPatrimonioTotal').textContent = '$' + patrimonioTotal.toLocaleString('es-CL');
+  const inv = getInvestmentValue();
+  document.getElementById('kpiPatrimonioSub').textContent = `CC ($${totalCC.toLocaleString('es-CL')}) + Inv ($${inv.toLocaleString('es-CL')})`;
+}
+
+function renderSaldos() {
+  const cuentas = ['bice', 'match', 'prex'];
+  cuentas.forEach(c => {
+    const s = getSaldo(c);
+    const el = document.getElementById('saldo' + c.charAt(0).toUpperCase() + c.slice(1));
+    el.textContent = '$' + s.toLocaleString('es-CL');
+    el.className = 'account-balance num' + (s < 0 ? ' num-neg' : '');
+
+    // Contar movimientos de la cuenta
+    const count = ccData.movimientos.filter(m => m.cuenta === c || m.cuentaDest === c).length;
+    const meta = document.getElementById('meta' + c.charAt(0).toUpperCase() + c.slice(1));
+    meta.textContent = count === 0 ? 'Sin movimientos' : `${count} movimiento${count !== 1 ? 's' : ''}`;
+  });
+  renderKPIs();
+}
+
+/* ══════════════════════════════════════════════
+   CAJA DIARIA — Balance Edit
+══════════════════════════════════════════════ */
+function toggleBalanceEdit(cuenta) {
+  const el = document.getElementById('edit' + cuenta.charAt(0).toUpperCase() + cuenta.slice(1));
+  el.classList.toggle('visible');
+  if (el.classList.contains('visible')) {
+    const currentBase = ccData.saldoBase[cuenta] || 0;
+    document.getElementById('edit' + cuenta.charAt(0).toUpperCase() + cuenta.slice(1) + 'Val').value = currentBase || '';
+  }
+}
+
+function setSaldoBase(cuenta) {
+  const val = parseFloat(document.getElementById('edit' + cuenta.charAt(0).toUpperCase() + cuenta.slice(1) + 'Val').value) || 0;
+  ccData.saldoBase[cuenta] = val;
+  saveCCData();
+  toggleBalanceEdit(cuenta);
+  renderSaldos();
+  renderChartsCaja();
+  showAlertCaja(`✅ Saldo base de ${cuenta.charAt(0).toUpperCase() + cuenta.slice(1)} actualizado a $${val.toLocaleString('es-CL')}`, 'success');
+}
+
+/* ══════════════════════════════════════════════
+   CAJA DIARIA — Formulario Movimiento
+══════════════════════════════════════════════ */
+function setTodayDate() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('movFecha').value = today;
+}
+
+function setTipo(tipo) {
+  currentTipo = tipo;
+  ['ingreso', 'gasto', 'transferencia'].forEach(t => {
+    const btn = document.getElementById('tipoBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+    btn.className = 'tipo-btn' + (t === tipo ? ` active-${t}` : '');
+  });
+
+  const cats = CATEGORIAS[tipo] || [];
+  const catGroup = document.getElementById('categoriaGroup');
+  const destGroup = document.getElementById('cuentaDestGroup');
+  const cuentaLabel = document.getElementById('cuentaLabel');
+
+  if (tipo === 'transferencia') {
+    catGroup.classList.add('hidden');
+    destGroup.classList.remove('hidden');
+    cuentaLabel.textContent = 'Cuenta origen';
+  } else {
+    catGroup.classList.remove('hidden');
+    destGroup.classList.add('hidden');
+    cuentaLabel.textContent = 'Cuenta';
+    const sel = document.getElementById('movCategoria');
+    sel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+}
+
+function registrarMovimiento() {
+  const fecha    = document.getElementById('movFecha').value;
+  const desc     = document.getElementById('movDesc').value.trim();
+  const montoRaw = parseFloat(document.getElementById('movMonto').value);
+  const cuenta   = document.getElementById('movCuenta').value;
+
+  if (!fecha) { showAlertCaja('Selecciona una fecha.', 'warning'); return; }
+  if (!desc)  { showAlertCaja('Ingresa una descripción.', 'warning'); return; }
+  if (!montoRaw || montoRaw <= 0) { showAlertCaja('Ingresa un monto válido mayor a 0.', 'warning'); return; }
+
+  const monto = Math.round(montoRaw);
+  const mov = {
+    id: Date.now().toString(),
+    fecha,
+    desc,
+    monto,
+    tipo: currentTipo,
+    cuenta,
+    categoria: currentTipo !== 'transferencia' ? document.getElementById('movCategoria').value : 'Transferencia'
+  };
+
+  if (currentTipo === 'transferencia') {
+    const dest = document.getElementById('movCuentaDest').value;
+    if (dest === cuenta) { showAlertCaja('La cuenta origen y destino no pueden ser la misma.', 'warning'); return; }
+    mov.cuentaDest = dest;
+    mov.desc = mov.desc || `Transferencia ${cuenta} → ${dest}`;
+  }
+
+  // Check gasto no excede saldo
+  if (currentTipo === 'gasto') {
+    const saldoActual = getSaldo(cuenta);
+    if (monto > saldoActual) {
+      showAlertCaja(`⚠️ El gasto ($${monto.toLocaleString('es-CL')}) supera el saldo de ${cuenta.charAt(0).toUpperCase() + cuenta.slice(1)} ($${saldoActual.toLocaleString('es-CL')}). Se registró igual.`, 'warning');
+    }
+  }
+
+  ccData.movimientos.unshift(mov); // newest first in array, but sort by date for display
+  saveCCData();
+  limpiarFormMovimiento();
+  renderSaldos();
+  renderMovimientos();
+  renderChartsCaja();
+  populateCategoryFilter();
+
+  const signo  = currentTipo === 'ingreso' ? '+' : currentTipo === 'gasto' ? '-' : '⇄';
+  showAlertCaja(`✅ ${currentTipo.charAt(0).toUpperCase() + currentTipo.slice(1)} de $${monto.toLocaleString('es-CL')} registrado. ${signo}`, 'success');
+}
+
+function limpiarFormMovimiento() {
+  document.getElementById('movDesc').value = '';
+  document.getElementById('movMonto').value = '';
+  setTodayDate();
+}
+
+function eliminarMovimiento(id) {
+  const mov = ccData.movimientos.find(m => m.id === id);
+  if (!mov) return;
+  showModal('¿Eliminar movimiento?', `"${mov.desc}" — $${mov.monto.toLocaleString('es-CL')}. Esta acción no se puede deshacer.`, 'Eliminar', () => {
+    ccData.movimientos = ccData.movimientos.filter(m => m.id !== id);
+    saveCCData();
+    renderSaldos();
+    renderMovimientos();
+    renderChartsCaja();
+  });
+}
+
+/* ══════════════════════════════════════════════
+   CAJA DIARIA — Movimientos Table
+══════════════════════════════════════════════ */
+function populateCategoryFilter() {
+  const all = [...new Set(ccData.movimientos.map(m => m.categoria))].filter(Boolean).sort();
+  const sel = document.getElementById('filterCategoria');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">Todas las categorías</option>' + all.map(c => `<option value="${c}" ${c === current ? 'selected' : ''}>${c}</option>`).join('');
+}
+
+function renderMovimientos() {
+  const tbody = document.getElementById('movimientosBody');
+  const filterCuenta   = document.getElementById('filterCuenta').value;
+  const filterTipo     = document.getElementById('filterTipo').value;
+  const filterCategoria = document.getElementById('filterCategoria').value;
+
+  let movs = [...ccData.movimientos];
+
+  // Sort by fecha desc
+  movs.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+  if (filterCuenta)    movs = movs.filter(m => m.cuenta === filterCuenta || m.cuentaDest === filterCuenta);
+  if (filterTipo)      movs = movs.filter(m => m.tipo === filterTipo);
+  if (filterCategoria) movs = movs.filter(m => m.categoria === filterCategoria);
+
+  if (movs.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="es-icon">📋</div>Sin movimientos${filterCuenta || filterTipo || filterCategoria ? ' con los filtros seleccionados' : ''}.</div></td></tr>`;
+    document.getElementById('movSummaryLabel').textContent = '';
+    return;
+  }
+
+  const totalIngresos = movs.filter(m => m.tipo === 'ingreso').reduce((s, m) => s + m.monto, 0);
+  const totalGastos   = movs.filter(m => m.tipo === 'gasto').reduce((s, m) => s + m.monto, 0);
+  document.getElementById('movSummaryLabel').textContent = `${movs.length} registros · +$${totalIngresos.toLocaleString('es-CL')} ingresos · -$${totalGastos.toLocaleString('es-CL')} gastos`;
+
+  const dotClass = { bice: 'dot-bice', match: 'dot-match', prex: 'dot-prex' };
+  const cuentaLabel = { bice: 'Bice', match: 'Match', prex: 'Prex' };
+
+  tbody.innerHTML = movs.map(m => {
+    const signo = m.tipo === 'ingreso' ? '+' : m.tipo === 'gasto' ? '-' : '⇄';
+    const colorClass = m.tipo === 'ingreso' ? 'num-pos' : m.tipo === 'gasto' ? 'num-neg' : '';
+    const destLabel = m.cuentaDest ? ` → <span class="cc-dot ${dotClass[m.cuentaDest]}"></span>${cuentaLabel[m.cuentaDest]}` : '';
+    const fechaFmt = new Date(m.fecha + 'T12:00:00').toLocaleDateString('es-CL', { day:'2-digit', month:'short', year:'numeric' });
+    return `<tr>
+      <td style="color:var(--text-light);font-size:12px;">${fechaFmt}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${m.desc}">${m.desc}</td>
+      <td><span class="mov-type-badge mov-${m.tipo}">${m.tipo.charAt(0).toUpperCase() + m.tipo.slice(1)}</span></td>
+      <td style="font-size:12px;color:var(--text-light);">${m.categoria}</td>
+      <td><span class="cc-dot ${dotClass[m.cuenta] || ''}"></span>${cuentaLabel[m.cuenta] || m.cuenta}${destLabel}</td>
+      <td class="num ${colorClass}" style="text-align:right;">${signo}$${m.monto.toLocaleString('es-CL')}</td>
+      <td style="text-align:center;"><button class="btn btn-small btn-danger" onclick="eliminarMovimiento('${m.id}')">🗑️</button></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════
+   CAJA DIARIA — Charts
+══════════════════════════════════════════════ */
+function toggleLineChart(mode) {
+  lineChartMode = mode;
+  document.getElementById('toggleCC').classList.toggle('active', mode === 'cc');
+  document.getElementById('togglePatrimonio').classList.toggle('active', mode === 'patrimonio');
+  renderChartEvolucion();
+}
+
+function renderChartsCaja() {
+  renderChartGastos();
+  renderChartIngresos();
+  renderChartEvolucion();
+}
+
+function renderChartGastos() {
+  const canvas = document.getElementById('chartGastos');
+  const empty  = document.getElementById('emptyGastos');
+  const movs   = getFilteredMovimientos().filter(m => m.tipo === 'gasto');
+
+  if (chartGastos) { chartGastos.destroy(); chartGastos = null; }
+
+  if (movs.length === 0) {
+    canvas.style.display = 'none';
+    empty.classList.remove('hidden');
+    return;
+  }
+
+  empty.classList.add('hidden');
+  canvas.style.display = 'block';
+
+  const byCategory = {};
+  movs.forEach(m => { byCategory[m.categoria] = (byCategory[m.categoria] || 0) + m.monto; });
+  const labels = Object.keys(byCategory);
+  const data   = labels.map(l => byCategory[l]);
+  const colors = labels.map(l => CATEGORY_COLORS[l] || '#999');
+
+  chartGastos = new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: colors,
+        borderWidth: 3,
+        borderColor: '#ffffff',
+        hoverBorderColor: '#ffffff',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '60%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { font: { family: "'DM Sans', sans-serif", size: 11 }, padding: 12, boxWidth: 12 }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` $${ctx.parsed.toLocaleString('es-CL')} (${((ctx.parsed / data.reduce((a,b) => a+b, 0))*100).toFixed(1)}%)`
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderChartIngresos() {
+  const canvas = document.getElementById('chartIngresos');
+  const empty  = document.getElementById('emptyIngresos');
+  const movs   = getFilteredMovimientos().filter(m => m.tipo === 'ingreso');
+
+  if (chartIngresos) { chartIngresos.destroy(); chartIngresos = null; }
+
+  if (movs.length === 0) {
+    canvas.style.display = 'none';
+    empty.classList.remove('hidden');
+    return;
+  }
+
+  empty.classList.add('hidden');
+  canvas.style.display = 'block';
+
+  const byCategory = {};
+  movs.forEach(m => { byCategory[m.categoria] = (byCategory[m.categoria] || 0) + m.monto; });
+  const labels = Object.keys(byCategory);
+  const data   = labels.map(l => byCategory[l]);
+  const colors = labels.map(l => CATEGORY_COLORS[l] || '#999');
+
+  chartIngresos = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Ingresos ($)',
+        data,
+        backgroundColor: colors,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => ` $${ctx.parsed.y.toLocaleString('es-CL')}` }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { family: "'DM Sans', sans-serif", size: 11 } }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          ticks: {
+            font: { family: "'DM Mono', monospace", size: 10 },
+            callback: v => '$' + (v / 1000).toFixed(0) + 'k'
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderChartEvolucion() {
+  const canvas = document.getElementById('chartEvolucion');
+  const empty  = document.getElementById('emptyEvolucion');
+
+  if (chartEvolucion) { chartEvolucion.destroy(); chartEvolucion = null; }
+
+  if (ccData.movimientos.length === 0 && getTotalCC() === 0) {
+    canvas.style.display = 'none';
+    empty.classList.remove('hidden');
+    return;
+  }
+
+  empty.classList.add('hidden');
+  canvas.style.display = 'block';
+
+  // Build time series: running saldo by date
+  const days = getPeriodDays();
+  const cutoff = getCutoffDate();
+  const allMovs = [...ccData.movimientos].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+  // Compute saldo at cutoff (from movements before cutoff)
+  let saldoAtCutoff = { bice: ccData.saldoBase.bice || 0, match: ccData.saldoBase.match || 0, prex: ccData.saldoBase.prex || 0 };
+  allMovs.filter(m => new Date(m.fecha) < cutoff).forEach(m => applyMovToSaldo(saldoAtCutoff, m));
+
+  // Build daily snapshots within period
+  const periodMovs = allMovs.filter(m => new Date(m.fecha) >= cutoff);
+  const byDay = {};
+  periodMovs.forEach(m => {
+    const day = m.fecha.substring(0, 10);
+    if (!byDay[day]) byDay[day] = [];
+    byDay[day].push(m);
+  });
+
+  const current = { ...saldoAtCutoff };
+  const sortedDays = Object.keys(byDay).sort();
+
+  const labels  = ['Inicio'];
+  const ccVals  = [current.bice + current.match + current.prex];
+  const invVal  = getInvestmentValue();
+  const patVals = [ccVals[0] + invVal];
+
+  sortedDays.forEach(day => {
+    byDay[day].forEach(m => applyMovToSaldo(current, m));
+    const fecha = new Date(day + 'T12:00:00');
+    labels.push(fecha.toLocaleDateString('es-CL', { day:'2-digit', month:'short' }));
+    const cc = current.bice + current.match + current.prex;
+    ccVals.push(cc);
+    patVals.push(cc + invVal);
+  });
+
+  // If only one point, add a "today" point
+  if (labels.length === 1) {
+    labels.push('Hoy');
+    ccVals.push(ccVals[0]);
+    patVals.push(patVals[0]);
+  }
+
+  const showPatrimonio = lineChartMode === 'patrimonio';
+  const datasets = [
+    {
+      label: 'Saldo CC',
+      data: ccVals,
+      borderColor: '#2ecc8a',
+      backgroundColor: 'rgba(46,204,138,0.08)',
+      borderWidth: 2.5,
+      tension: 0.35,
+      fill: true,
+      pointBackgroundColor: '#2ecc8a',
+      pointRadius: ccVals.length <= 10 ? 4 : 2,
+      pointHoverRadius: 6,
+    }
+  ];
+
+  if (showPatrimonio) {
+    datasets.push({
+      label: 'Patrimonio Total',
+      data: patVals,
+      borderColor: '#c9a84c',
+      backgroundColor: 'rgba(201,168,76,0.06)',
+      borderWidth: 2.5,
+      tension: 0.35,
+      fill: false,
+      pointBackgroundColor: '#c9a84c',
+      pointRadius: patVals.length <= 10 ? 4 : 2,
+      pointHoverRadius: 6,
+      borderDash: [6, 3],
+    });
+  }
+
+  chartEvolucion = new Chart(canvas, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { font: { family: "'DM Sans', sans-serif", size: 11 }, padding: 16, boxWidth: 20 }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('es-CL')}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: { font: { family: "'DM Sans', sans-serif", size: 10 }, maxRotation: 45 }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: {
+            font: { family: "'DM Mono', monospace", size: 10 },
+            callback: v => {
+              if (Math.abs(v) >= 1000000) return '$' + (v / 1000000).toFixed(1) + 'M';
+              if (Math.abs(v) >= 1000) return '$' + (v / 1000).toFixed(0) + 'k';
+              return '$' + v;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function applyMovToSaldo(s, m) {
+  if (m.tipo === 'ingreso') s[m.cuenta] = (s[m.cuenta] || 0) + m.monto;
+  else if (m.tipo === 'gasto') s[m.cuenta] = (s[m.cuenta] || 0) - m.monto;
+  else if (m.tipo === 'transferencia') {
+    s[m.cuenta]   = (s[m.cuenta]   || 0) - m.monto;
+    s[m.cuentaDest] = (s[m.cuentaDest] || 0) + m.monto;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   ALERT CAJA
+══════════════════════════════════════════════ */
+function showAlertCaja(msg, type) {
+  const alert = document.getElementById('alertCaja');
+  alert.className = `alert alert-${type}`;
+  alert.textContent = msg;
+  setTimeout(() => { alert.className = 'alert hidden'; }, 5000);
 }
 </script>
-
 </body>
 </html>
